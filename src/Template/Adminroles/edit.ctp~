@@ -1,0 +1,163 @@
+<div class="body-container span10">
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <ul class="breadcrumb">
+                        <li>
+                            <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
+                        </li>
+                        <li>
+                            <a href="<?php echo BASE_URL; ?>administrator/roles">Roles</a> <span class="divider">/</span>
+                        </li>
+                        <li>
+                            <!--<a href="">EDit</a> <span class="divider">/</span>-->Edit
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+            <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
+            <div class="row-fluid">
+
+                <div class="span12">
+                    <section class="utopia-widget">
+                        <div class="utopia-widget-title">
+                            <img class="utopia-widget-icon" src="<?php echo BASE_URL; ?>backend/img/icons2/software24.png">
+                            <span>Edit Roles</span>
+                        </div>
+
+                        
+                        <form name="addFrm" id="addFrm" method="POST" action="">
+                        <div class="utopia-widget-content">
+                        
+                        <div class="row-fluid">
+                                                    
+                        <div class="span6">
+                            <div class="dataTables_filter" id="DataTables_Table_0_filter" style="margin-top: 4px; margin-right: 293px;"> 
+                                <input type="text" value="<?php echo $roles->roleName; ?>" placeholder="Enter roles here" name="roleName" id="roleName" />
+                                <input type="hidden" value="<?php echo $roles->roleName; ?>" placeholder="Enter roles here" name="old_roleName" />
+                            </div>
+                        </div>
+
+                        </div>
+                                    
+                            <span style="color:green;"><?= $this->Flash->render('positive') ?></span>        
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Module Name</th>
+                                    <th>Add</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                    <th>List</th>
+                                    <th>Goal List</th>
+                                    <th>Size Availability</th>
+                                </tr>
+                                </thead>
+
+
+                                <tbody> 
+                                
+                                <?php $c=1; ?>
+                                <?php
+                                    $usedModules = array();
+                                    $usedModulesNames = array();
+                                ?>
+                                <?php foreach ($allPermissions as $val): ?>
+                                <?php
+                                    $usedModules[]=array(
+                                                'id'=>$val->id,
+                                                'moduleName'=>$val->moduleName,
+                                                'moduleAdd'=>$val->moduleAdd,
+                                                'moduleEdit'=>$val->moduleEdit,
+                                                'moduleDelete'=>$val->moduleDelete,
+                                                'moduleGoalList'=>$val->moduleGoalList,
+                                                'moduleSizeAvailability'=>$val->moduleSizeAvailability
+                                    );
+                                ?>
+                                <tr>
+                                    <td>
+                                        <?php echo $val->module->moduleName; ?>
+                                        <input type="hidden" name="hidModuleId_<?php echo $c; ?>" id="hidModuleId_<?php echo $c; ?>" value="<?php echo $val->module->id; ?>" />
+                                    </td>
+                                    <td><input <?php echo $val->moduleAdd=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleAdd_<?php echo $c; ?>" id="moduleAdd_<?php echo $c; ?>" /></td>
+                                    <td><input <?php echo $val->moduleEdit=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleEdit_<?php echo $c; ?>" id="moduleEdit_<?php echo $c; ?>" /></td>
+                                    <td><input <?php echo $val->moduleDelete=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleDelete_<?php echo $c; ?>" id="moduleDelete_<?php echo $c; ?>" /></td>
+                                    <td><input <?php echo $val->moduleList=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleList_<?php echo $c; ?>" id="moduleList_<?php echo $c; ?>" /></td>
+                                    <td>
+                                        <?php if($val->module->id=='7'){ ?>
+                                        <input <?php echo $val->moduleGoalList=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleGoalList_<?php echo $c; ?>" id="moduleGoalList_<?php echo $c; ?>" />
+                                        <?php }else{ ?>
+                                        --
+                                        <?php } ?>
+                                    </td>
+                                    <td>
+                                        <?php if($val->module->id=='5'){ ?>
+                                        <input <?php echo $val->moduleSizeAvailability=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleSizeAvailability_<?php echo $c; ?>" id="moduleSizeAvailability_<?php echo $c; ?>" />
+                                        <?php }else{ ?>
+                                        --
+                                        <?php } ?>
+                                    </td>
+                                </tr>  
+                                
+                                <?php $c++; ?>
+                                <?php endforeach; ?>
+                                <?php
+                                    if(count($usedModules) < count($allModulesArr))
+                                    {
+                                        $extraOnes = @array_diff_assoc($allModulesArr, $usedModules);
+                                    
+                                    foreach($extraOnes as $val){
+                                ?>
+                                
+                                    <tr>
+                                         <td>
+                                             <?php echo $val['moduleName']; ?>
+                                             <input type="hidden" name="hidModuleId_<?php echo $c; ?>" id="hidModuleId_<?php echo $c; ?>" value="<?php echo $val['id']; ?>" />
+                                         </td>
+                                         <td><input <?php echo $val['moduleAdd']=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleAdd_<?php echo $c; ?>" id="moduleAdd_<?php echo $c; ?>" /></td>
+                                         <td><input <?php echo $val['moduleEdit']=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleEdit_<?php echo $c; ?>" id="moduleEdit_<?php echo $c; ?>" /></td>
+                                         <td><input <?php echo $val['moduleDelete']=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleDelete_<?php echo $c; ?>" id="moduleDelete_<?php echo $c; ?>" /></td>
+                                         <td><input <?php echo $val['moduleList']=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleList_<?php echo $c; ?>" id="moduleList_<?php echo $c; ?>" /></td>
+                                         <td>
+                                             <?php if($val['id']=='7'){ ?>
+                                             <input <?php echo $val['moduleGoalList']=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleGoalList_<?php echo $c; ?>" id="moduleGoalList_<?php echo $c; ?>" />
+                                             <?php }else{ ?>
+                                             --
+                                             <?php } ?>
+                                         </td>
+                                         <td>
+                                             <?php if($val['id']=='5'){ ?>
+                                             <input <?php echo $val['moduleSizeAvailability']=='1' ? "checked='checked'" : ""; ?> type="checkbox" name="moduleSizeAvailability_<?php echo $c; ?>" id="moduleSizeAvailability_<?php echo $c; ?>" />
+                                             <?php }else{ ?>
+                                             --
+                                             <?php } ?>
+                                         </td>
+                                     </tr>
+                                
+                                <?php $c++;}} ?>
+                                </tbody>
+
+                                
+                            </table>
+
+                            <div class="row-fluid">
+                                <div class="span6"> </div>
+                                <div><input type="submit" name="subBtn" id="subBtn" value="Submit"></div>
+                            </div>
+
+                        </div>
+                            
+                        
+                        </form>
+                    </section>
+                </div>
+            </div>
+
+
+
+</div>
+
+
+
