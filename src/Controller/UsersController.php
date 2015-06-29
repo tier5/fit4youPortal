@@ -5,7 +5,9 @@ use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Utility\Security;
 use Cake\Utility\Sendemail;
-use Cake\Auth\DefaultPasswordHasher;  
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\I18n\Time;
+use Cake\Network\Request;
 
 // src/Controller/UsersController.php
 
@@ -21,7 +23,7 @@ class UsersController extends AppController
 	public function initialize()
 	{
 	    parent::initialize();
-	    //$this->loadComponent('ImageTransform');
+	    
 	    
 		$this->loadComponent('Auth', [
                                         'authorize'=> 'Controller',//added this line
@@ -150,6 +152,7 @@ public function dashboard()
 
 public function edit($id=null)
 {
+	Time::setToStringFormat('YYYY-MM-dd h:i:s');
    $this->set('active_class','user');
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
@@ -212,7 +215,7 @@ public function edit($id=null)
 			'role'              =>      $postData['role'],
 			'username'          =>      $postData['username'],
 			'password'          =>      $postData['password'],
-			'firstName'         =>      $postData['firtName'],
+			'firstName'         =>      $postData['firstName'],
 			'lastName'          =>      $postData['lastName'],
 			'userPin'           =>      $postData['userPin'],
 			'email'             =>      $postData['email'],
@@ -223,8 +226,7 @@ public function edit($id=null)
 			'zip'               =>      $postData['zip'],
 			'address'           =>      $postData['address'],
 			'photo'             =>      $imageName.'.'.$extn,
-			'join_date'	    =>      date('Y-m-d'),
-			'update_date'	    =>      time(),
+			'update_date'	    =>      Time::now(),
 			'is_login'          =>      '0',
 			'is_active'         =>      '1',
 			'is_deleted'        =>      '0'
@@ -248,8 +250,7 @@ public function edit($id=null)
 				'country'           =>      $postData['country'],
 				'zip'               =>      $postData['zip'],
 				'address'           =>      $postData['address'],
-				'join_date'	    =>      date('Y-m-d'),
-				'update_date'	    =>      time(),
+				'update_date'	    =>      Time::now(),
 				'is_login'          =>      '0',
 				'is_active'         =>      '1',
 				'is_deleted'        =>      '0'
@@ -271,8 +272,7 @@ public function edit($id=null)
 				'country'           =>      $postData['country'],
 				'zip'               =>      $postData['zip'],
 				'address'           =>      $postData['address'],
-				'join_date'	    =>      date('Y-m-d'),
-				'update_date'	    =>      time(),
+				'update_date'	    =>      Time::now(),
 				'is_login'          =>      '0',
 				'is_active'         =>      '1',
 				'is_deleted'        =>      '0'
@@ -389,15 +389,15 @@ public function add()
 			'zip'               =>      $postData['zip'],
 			'address'           =>      $postData['address'],
 			'photo'             =>      $imageName.'.'.$extn,
-			'join_date'	    =>      date('Y-m-d'),
-			'update_date'	    =>      time(),
+			'join_date'	    =>      Time::now(),
+			'update_date'	    =>      Time::now(),
 			'is_login'          =>      '0',
 			'is_active'         =>      '1',
 			'is_deleted'        =>      '0'
 		);         
 		
 
-            $user = $this->Users->patchEntity($user, $postData);
+            $user = $this->Users->patchEntity($user, $databaseArr);
             $this->Users->save($user);
             
             $mailBody = '
@@ -521,6 +521,80 @@ public function trainerlist()
 	
 }
 
+public function userProfile($id=null)
+{
+   $this->set('active_class','user');
+    $session = $this->request->session();
+    $adminDetls = $session->read('admin.details');
+
+    $this->loadComponent('ImageTransform');
+    $this->loadModel('Users');
+
+    $validationErrMsg = array();
+    $fieldsValue = array();
+    $organisationTeams = array();
+    $hasError = 0;
+    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
+
+
+    $this->set('title',"Admin|View Client Profile");
+    $this->set('description','View Client Profile');
+    $this->set('userRole',$adminDetls->role);
+    $user = $this->Users->get($id, [
+        'contain' => []
+    ]);
+    
+    $this->set(compact('user'));
+    $this->set('_serialize', ['user']);
+}
+
+public function userStat($user_id=NULL)
+{
+   $this->request->allowMethod(['ajax','post','get']);
+   $_ENV['HTTP_X_REQUESTED_WITH']	=	'XMLHttpRequest'; 
+   $this->set('active_class','user');
+   
+   
+    $session = $this->request->session();
+    $adminDetls = $session->read('admin.details');
+
+    $this->set('title','Admin|Client Statistics');
+    $this->set('description','Admin|Client Statistics');
+    $this->set('userRole',$adminDetls->role);
+    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
+    $validationErrMsg = array();
+    $fieldsValue = array();
+    $hasError = 0;
+   
+    $this->loadModel('UserStats');
+    $this->loadModel('Users');
+   
+    if($this->request->is('ajax'))
+    {  
+		$postData = $this->request->data();
+		//print_r($postData);
+		$user = $this->UserStats->newEntity($postData);                       
+
+		$this->UserStats->save($user);
+
+		
+		//$this->redirect(BASE_URL.'administrator/user/stat');
+		$user_id = $postData['user_id'];
+    }
+	//$query = $this->UserStats->find('all')
+	$query = $this->UserStats->find()->where(['UserStats.user_id' => $user_id]);
+	$user_details = $this->Users->find()->where(['Users.id' => $user_id])->first();		
+
+
+
+   	$stats=$this->paginate($query);
+    $this->set('stats',$stats);
+	$this->set('user_id',$user_id);
+	$this->set('user_details',$user_details);
+	$this->set(['allRecordCount' => $stats->count()]);
+}
+
+
 public function logout()
 {
     $this->autorender=false;
@@ -591,7 +665,7 @@ public function isAuthorized($user)
 {
      $action = $this->request->params['action'];
      // The add and index actions are always allowed.
-     if (in_array($action, ['index', 'dashboard','logout','add','userlist','trainerlist','edit','delete'])) {
+     if (in_array($action, ['index', 'dashboard','logout','add','userlist','trainerlist','edit','delete','userProfile','userStat'])) {
      return true;
      }
      // All other actions require an id.
