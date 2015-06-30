@@ -15,15 +15,7 @@ class AdminschedulesController extends AppController{
         $this->set('active_class','schedule');
         $session = $this->request->session();
         $adminDetls = $session->read('admin.details');
-        /*$hasAccess = $this->hasAccess($adminDetls->id,'9','moduleList');
-        if($hasAccess=='0' && $adminDetls->id!='1'){
-            $this->Flash->success("You don't have access to this page.", [
-               'key' => 'positive'
-            ]);
-            $this->redirect('admin/dashboard');        
-        }*/
-        
-        //$connection = ConnectionManager::get('default');
+
         $this->loadModel('UserRelations');
         $this->loadModel('Users');
         $this->set('title',"Admin|Schedule List");
@@ -38,13 +30,20 @@ class AdminschedulesController extends AppController{
         $this_roles = $this->paginate($this->UserRelations->find());
         $allRecordCount = $this_roles->count();
         
-        $r=$this->UserRelations->find('all',array('conditions'=>array('Client.userPin' => $pin, 'Client.is_active' => '1'),'contain'=>['Client','Trainer']));
+        $r=$this->UserRelations->find('all',array('conditions'=>['Client.is_active' => '1','Trainer.is_active' => '1'],'contain'=>['Client','Trainer']));
         
+        $arr = $r->toArray();
+
         $this->set(array(
             'allRecordCount'   =>  $allRecordCount
         ));
         
-        $this->set('schedules', $data);
+        $this_user=$this->paginate($this->UserRelations);
+            $this->set(array(
+                'allRecordCount' => $this_user->count()
+        ));
+        
+        $this->set('schedules', $arr);
         $this->set('_serialize', ['schedules']);
     }
     
@@ -53,13 +52,6 @@ class AdminschedulesController extends AppController{
         $this->set('active_class','schedule');
         $session = $this->request->session();
         $adminDetls = $session->read('admin.details');
-        /*$hasAccess = $this->hasAccess($adminDetls->id,'9','moduleAdd');
-        if($hasAccess=='0' && $adminDetls->id!='1'){
-            $this->Flash->success("You don't have access to this page.", [
-               'key' => 'positive'
-            ]);
-            $this->redirect('admin/dashboard');        
-        }*/
         
         $this->loadModel('UserRelations');
         //$this->loadModel('Modules');
@@ -88,7 +80,7 @@ class AdminschedulesController extends AppController{
                 'trainer_id'    =>      $postData['trainer_id'],
                 'start_time'    =>      $postData['start_time'],
                 'end_time'      =>      $postData['end_time'],
-                'is_active'     =>      $postData['is_active']
+                'status'        =>      $postData['status']
             );  
 
             $schedules = $this->UserRelations->patchEntity($schedules, $databaseArr);
