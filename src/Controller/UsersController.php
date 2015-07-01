@@ -551,10 +551,10 @@ public function userProfile($id=null)
 public function userStat($user_id=NULL)
 {
    $this->request->allowMethod(['ajax','post','get']);
-   $_ENV['HTTP_X_REQUESTED_WITH']	=	'XMLHttpRequest'; 
+   $_ENV['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest'; 
    $this->set('active_class','user');
    
-   
+    
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
 
@@ -570,16 +570,44 @@ public function userStat($user_id=NULL)
     $this->loadModel('Users');
    
     if($this->request->is('ajax'))
-    {  
-		$postData = $this->request->data();
-		//print_r($postData);
-		$user = $this->UserStats->newEntity($postData);                       
-
-		$this->UserStats->save($user);
-
+    {
+	//$this->viewClass ="Ajax";
+	$this->layout = 'ajax';
+	$postData = $this->request->data();
+	
+	if(!empty($postData['id']))
+	{
 		
-		//$this->redirect(BASE_URL.'administrator/user/stat');
+		$databaseArr = array(
+			'weight'     	=>  $postData['weight'],
+			'chest'		=>  $postData['chest'],
+			'waist'    	=>  $postData['waist'],
+			'biceps'    	=>  $postData['biceps'],
+			'triceps'    	=>  $postData['triceps'],
+		);
+		
+		//$user = $this->UserStats->newEntity($postData);
+		$this->UserStats->update($databaseArr,['user_id' => $postData['user_id']]);
 		$user_id = $postData['user_id'];
+		
+	}
+	else
+	{
+		$user = $this->UserStats->newEntity($postData);
+		$this->UserStats->save($user);
+		$user_id = $postData['user_id'];
+	}
+	
+		
+		
+		$query = $this->UserStats->find()->where(['UserStats.user_id' => $user_id]);
+		$user_details = $this->Users->find()->where(['Users.id' => $user_id])->first();
+		$stats=$this->paginate($query);
+		$this->set('stats',$stats);
+		$this->set('user_id',$user_id);
+		$this->set('user_details',$user_details);
+		$this->set(['allRecordCount' => $stats->count()]);
+		$this->render('ajax/user_stat');
     }
 	//$query = $this->UserStats->find('all')
 	$query = $this->UserStats->find()->where(['UserStats.user_id' => $user_id]);
@@ -588,7 +616,7 @@ public function userStat($user_id=NULL)
 
 
    	$stats=$this->paginate($query);
-    $this->set('stats',$stats);
+	$this->set('stats',$stats);
 	$this->set('user_id',$user_id);
 	$this->set('user_details',$user_details);
 	$this->set(['allRecordCount' => $stats->count()]);
