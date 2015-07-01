@@ -19,8 +19,6 @@ class WebservicesController extends AppController
 	public function index()
 	{
 		$this->autoRender = false;
-		
-		
 	
 	}
 	
@@ -47,7 +45,7 @@ class WebservicesController extends AppController
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '1'])
-				->where(['client_id' => $client_data['id'],'start_time <=' => date('Y-m-d H:i:s',strtotime('+1 hours')) ])
+				->where(['client_id' => $client_data['id'],'start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' hours')) ])
 				->execute();
 			
 			$query = $this->UserRelations->query();
@@ -61,10 +59,26 @@ class WebservicesController extends AppController
 			$arr = $r->toArray();
 			if(empty($arr))
 			{
+				
+				$data['id'] = $arr['id'];
+				$data['trainer_id'] = '';
+				$data['client_id'] = $client_data['id'];
+				$data['start_time'] = '';
+				$data['end_time'] = '';
+				$data['status'] = '0';
+				$data['trainer']['firstName'] = '';
+				$data['trainer']['lastName'] = '';
+				$data['trainer']['role'] = '';
+				$data['trainer']['userPin'] = '';
+				$data['trainer']['city'] = '';
+				$data['trainer']['state'] = '';
+				$data['trainer']['country'] = '';
+				$data['trainer']['is_present_trainer'] = '';
+				
+				
 				$data['client'] = $client_data;
 				$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
 				$data['client']['msg'] = 'You dont have any existing session';
-				//cho '<pre>';print_r($data);exit;
 				echo json_encode($data);
 				exit;
 			}
@@ -79,7 +93,7 @@ class WebservicesController extends AppController
 				$data['end_time'] =  $end_time['date'];
 				$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
 				$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
-				//echo '<pre>';print_r($data);exit;
+				pr($data);exit;
 				echo json_encode($data);
 				exit;
 			}
@@ -120,7 +134,7 @@ class WebservicesController extends AppController
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '1'])
-				->where(['trainer_id' => $trainer_data['id'],'start_time <=' => date('Y-m-d H:i:s',strtotime('+1 hours')) ])
+				->where(['trainer_id' => $trainer_data['id'],'start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' hours')) ])
 				->execute();
 				
 			$query = $this->UserRelations->query();
@@ -134,9 +148,25 @@ class WebservicesController extends AppController
 			if(empty($arr))
 			{
 				
-				$data = $this->Users->find('all',['conditions' => ['userPin' => $pin]])->first()->toArray();
-				$data['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['photo'];
-				$data['msg'] = 'You dont have any existing session';
+				$data['id'] = $arr['id'];
+				$data['trainer_id'] = $trainer_data['id'];
+				$data['client_id'] = '';
+				$data['start_time'] = '';
+				$data['end_time'] = '';
+				$data['status'] = '0';
+				$data['client']['firstName'] = '';
+				$data['client']['lastName'] = '';
+				$data['client']['role'] = '';
+				$data['trainer']['userPin'] = '';
+				$data['client']['city'] = '';
+				$data['client']['state'] = '';
+				$data['client']['country'] = '';
+				$data['client']['is_present_trainer'] = '';
+				
+				
+				$data['trainer'] = $trainer_data;
+				$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
+				$data['trainer']['msg'] = 'You dont have any existing session';
 				echo json_encode($data);
 				exit;
 			}
@@ -173,12 +203,12 @@ class WebservicesController extends AppController
 	{
 		$this->autoRender = false;
 		$this->loadModel('Users');
-		$pin = $this->request->data['pin'];
+		$id = $this->request->data['id'];
 		
 		$query = $this->Users->query();
 		$flag = $query->update()
-				->set(['is_present' => '1'])
-				->where(['pin' => $pin])
+				->set(['is_present_client' => '1'])
+				->where(['id' => $id])
 				->execute();
 
 		if(!empty($flag))
