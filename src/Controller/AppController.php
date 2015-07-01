@@ -29,7 +29,7 @@ use Cake\Utility\Security;
 class AppController extends Controller
 {
      var $helpers=['Html'];
-
+     var $settings = array();
     /**
      * Initialization hook method.
      *
@@ -42,13 +42,16 @@ class AppController extends Controller
         parent::initialize();
         $this->loadComponent('Flash');
         $this->loadComponent('Cookie');
-        
+        $this->loadComponent('RequestHandler');
         
     }
     
     public function beforeFilter(Event $event){
         parent::beforeFilter($event);
-        
+        $this->loadModel('Sitesettings');
+        $settings_data = $this->Sitesettings->find('all')->toArray();
+        $this->settings['xtime'] = $settings_data[0]->value;
+        $this->settings['ytime'] = $settings_data[1]->value;
         $session = $this->request->session();
         $uri=$_SERVER['REQUEST_URI']; //// uri defined 
              
@@ -76,21 +79,6 @@ class AppController extends Controller
             return 1;
         }else{
             return 0;
-        }
-    }
-
-    public function hasAccess($usersId,$moduleId,$methodName){
-        $connection = ConnectionManager::get('default');        
-        $sqlUser = "SELECT * FROM `users` WHERE `id`='".$usersId."'";
-        $usersDetls = $connection->execute($sqlUser)->fetchAll('assoc');        
-        $sqlModulePermissions = "SELECT * FROM `module_permissions` "
-                . "WHERE `roleId`='".$usersDetls[0]['userRoles']."'"
-                . "AND `moduleId`='".$moduleId."'";
-        $modulePermissionDetls = $connection->execute($sqlModulePermissions)->fetchAll('assoc');  
-        if(isset($modulePermissionDetls[0][$methodName])){
-            return $modulePermissionDetls[0][$methodName];  
-        }else{
-            return "0";
         }
     }
     
