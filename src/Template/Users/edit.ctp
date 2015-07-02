@@ -25,6 +25,7 @@
     </div>
 
     <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+    <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
@@ -85,9 +86,6 @@
                             </div>
                         </div>
 
-                        
-
-                        
                         <div class="control-group">
                             <label for="input01" class="control-label">Email<span style="color:#ff0000;">*</span></label>
 
@@ -207,4 +205,58 @@
         }
         return true;
     }
+</script>
+<script>
+
+$().ready(function() {
+
+        // validate signup form on keyup and submit
+        $("#addFrm").validate({
+                rules: {
+                        role: "required",
+                        userPin: "required",
+                        firstName: "required",
+                        lastName: "required",
+                        username: {
+                                required: true,
+                                minlength: 4,
+                                maxlength: 14
+                        },
+                        email: {
+                                required: true,
+                                email: true
+                        },
+                        phone: "required",
+                        city: "required",
+                        state: "required",
+                        country: "required",
+                        zip: "required",
+                        address: "required"
+                },
+                messages: {
+                        role: "Please select user role",
+                        userPin: "please enter user PIN",
+                        firstName: "Please enter user's firstname",
+                        lastName: "Please enter user's lastname",
+                        username: {
+                                required: "Please enter a username",
+                                minlength: "Your username must consist of at least 4 characters",
+                                maxlength: "Your username must consist less or equal 14 characters"
+                        },
+                        email: {
+                                required: "Please enter email ID",
+                                email: "Email ID not valid"
+                        },
+                        phone: "Please enter phone number",
+                        city: "Please enter city",
+                        state: "Please enter state",
+                        country: "Please enter country",
+                        zip: "Please enter zip",
+                        address: "Please enter address"
+                }
+        });
+
+		
+
+});
 </script>

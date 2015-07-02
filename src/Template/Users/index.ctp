@@ -53,7 +53,7 @@ echo $this->Form->checkbox('remember_me', ['value' =>'on','hiddenField' => false
                             </ul>
 
                                 
-                            <label><a href="<?php echo BASE_URL ?>admin/forgotpass">Can't access your account?</a></label>
+                            <label><a href="<?php echo BASE_URL ?>administrator/forgotpass">Can't access your account?</a></label>
                        
                       <?php echo $this->Form->end();?>
                     </div>

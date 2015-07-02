@@ -56,7 +56,7 @@
                                     <td><?php echo $user->firstName.' '.$user->lastName; ?></td>
                                     <td><?= h(date('d-M-Y g:i A',strtotime($user->join_date))) ?></td>
                                     <td>
-                                        <a href="<?php echo BASE_URL; ?>admin/user/edit/<?php echo $user->id; ?>">Edit</a>
+                                        <a href="<?php echo BASE_URL; ?>administrator/user/edit/<?php echo $user->id; ?>">Edit</a>
                                         &nbsp;|&nbsp;
                                         <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>admin/user/delete/<?php echo  $user->id; ?>">Delete</a>
                                     </td>

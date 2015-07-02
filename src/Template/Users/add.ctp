@@ -28,6 +28,7 @@
 
     
     <span style="color:green; font-size:18px; padding-top:10px;"><?= $this->Flash->render('positive') ?></span>
+    <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
     <div class="row-fluid">
         <div class="utopia-widget-content">
             <div class="span6 utopia-form-freeSpace">
@@ -100,7 +101,7 @@
                             <label for="input01" class="control-label">Phone<span style="color:#ff0000;">*</span></label>
 
                             <div class="controls">
-                                <input type="text" onkeypress="return isNumber(event)"  value="" name="phone" id="phone" class="span10" id="input01"> 
+                                <input type="text" value="" name="phone" id="phone" class="span10" id="input01"> 
                             </div>
                         </div>
                         
@@ -194,4 +195,69 @@
         }
         return true;
     }
+</script>
+<script>
+
+$().ready(function() {
+
+        // validate signup form on keyup and submit
+        $("#addFrm").validate({
+                rules: {
+                        role: "required",
+                        userPin: "required",
+                        firstName: "required",
+                        lastName: "required",
+                        username: {
+                                required: true,
+                                minlength: 4,
+                                maxlength: 14
+                        },
+                        password: {
+                                required: true,
+                                minlength: 6,
+                                maxlength: 20
+                        },
+                        email: {
+                                required: true,
+                                email: true
+                        },
+                        phone: "required",
+                        city: "required",
+                        state: "required",
+                        country: "required",
+                        zip: "required",
+                        address: "required"
+                },
+                messages: {
+                        role: "Please select user role",
+                        userPin: "please enter user PIN",
+                        firstName: "Please enter user's firstname",
+                        lastName: "Please enter user's lastname",
+                        username: {
+                                required: "Please enter a username",
+                                minlength: "Your username must consist of at least 4 characters",
+                                maxlength: "Your username must consist less or equal 14 characters"
+                        },
+                        password: {
+                                required: "Please provide a password",
+                                minlength: "Your password must be at least 6 characters",
+                                maxlength: "Your password must consist less or equal 20 characters"
+                        },
+                        
+                        email: {
+                                required: "Please enter email ID",
+                                email: "Email ID not valid"
+                        },
+                        phone: "Please enter phone number",
+                        city: "Please enter city",
+                        state: "Please enter state",
+                        country: "Please enter country",
+                        zip: "Please enter zip",
+                        address: "Please enter address"
+                }
+        });
+
+		
+
+});
 </script>
