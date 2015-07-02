@@ -45,47 +45,23 @@ class WebservicesController extends AppController
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '1'])
-				->where(['client_id' => $client_data['id'],'start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' hours')) ])
+				->where(['client_id' => $client_data['id'],'start_time >' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
 				->execute();
 			
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '0'])
-				->where(['client_id' => $client_data['id'],'end_time <' => date('Y-m-d H:i:s') ])
+				->where(['client_id' => $client_data['id'],'start_time <' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes')) ])
 				->execute();
 			
 			
-			$r=$this->UserRelations->find('all',array('conditions'=>array('Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.status' => '1'),'contain'=>['Client','Trainer']));
-			$arr = $r->toArray();
-			if(empty($arr))
-			{
-				
-				$data['id'] = $arr['id'];
-				$data['trainer_id'] = '';
-				$data['client_id'] = $client_data['id'];
-				$data['start_time'] = '';
-				$data['end_time'] = '';
-				$data['status'] = '0';
-				$data['trainer']['firstName'] = '';
-				$data['trainer']['lastName'] = '';
-				$data['trainer']['role'] = '';
-				$data['trainer']['userPin'] = '';
-				$data['trainer']['city'] = '';
-				$data['trainer']['state'] = '';
-				$data['trainer']['country'] = '';
-				$data['trainer']['is_present_trainer'] = '';
-				
-				
-				$data['client'] = $client_data;
-				$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
-				$data['client']['msg'] = 'You dont have any existing session';
-				echo json_encode($data);
-				exit;
-			}
-			$data = $arr[0]->toArray();
+			$r=$this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s')],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+			$data = $r->toArray();
+			//$data = $arr->toArray();
 			
 			if($data['id'])
 			{
+				$data['sucess'] = '1';
 				$start_time = get_object_vars($data['start_time']);
 				$end_time = get_object_vars($data['end_time']);
 				$data['status'] = '1';
@@ -93,20 +69,20 @@ class WebservicesController extends AppController
 				$data['end_time'] =  $end_time['date'];
 				$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
 				$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
-				pr($data);exit;
+				//pr($data);exit;
 				echo json_encode($data);
 				exit;
 			}
 			else
 			{
-				echo json_encode(['status'=>0,'msg'=>'Sorry there is some error.Try later']);
+				echo json_encode(['sucess'=>0,'msg'=>'Sorry there is some error.Try later']);
 				exit;
 				
 			}
 		}
 		else
 		{
-			echo json_encode(['status'=>0,'msg'=>'Sorry PIN does not match']);
+			echo json_encode(['sucess'=>0,'msg'=>'Sorry PIN does not match']);
 			exit;	
 		}
 		
@@ -143,37 +119,12 @@ class WebservicesController extends AppController
 				->where(['trainer_id' => $trainer_data['id'],'end_time <' => date('Y-m-d H:i:s'), ])
 				->execute();
 				
-			$r=$this->UserRelations->find('all',array('conditions'=>['Trainer.userPin' => $pin, 'Trainer.is_active' => '1','UserRelations.status' => '1'],'contain'=>['Trainer','Client']));
-			$arr = $r->toArray();
-			if(empty($arr))
-			{
-				
-				$data['id'] = $arr['id'];
-				$data['trainer_id'] = $trainer_data['id'];
-				$data['client_id'] = '';
-				$data['start_time'] = '';
-				$data['end_time'] = '';
-				$data['status'] = '0';
-				$data['client']['firstName'] = '';
-				$data['client']['lastName'] = '';
-				$data['client']['role'] = '';
-				$data['trainer']['userPin'] = '';
-				$data['client']['city'] = '';
-				$data['client']['state'] = '';
-				$data['client']['country'] = '';
-				$data['client']['is_present_trainer'] = '';
-				
-				
-				$data['trainer'] = $trainer_data;
-				$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
-				$data['trainer']['msg'] = 'You dont have any existing session';
-				echo json_encode($data);
-				exit;
-			}
-			$data = $arr[0]->toArray();
-			//echo '<pre>';print_r($data);echo '<pre>';exit;
+			$r=$this->UserRelations->find('all',array('conditions'=>['Trainer.userPin' => $pin, 'Trainer.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s')],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+			$data = $r->toArray();
+			//$data = $arr[0]->toArray();
 			if($data['id'])
 			{
+				$data['sucess'] = '1';
 				$start_time = get_object_vars($data['start_time']);
 				$end_time = get_object_vars($data['end_time']);
 				$data['status'] = '1';
@@ -186,14 +137,14 @@ class WebservicesController extends AppController
 			}
 			else
 			{
-				echo json_encode(['status'=>0,'msg'=>'Sorry there is some error.Try later']);
+				echo json_encode(['sucess'=>0,'msg'=>'Sorry there is some error.Try later']);
 				exit;
 				
 			}
 		}
 		else
 		{
-			echo json_encode(['status'=>0,'msg'=>'Sorry PIN does not match']);
+			echo json_encode(['sucess'=>0,'msg'=>'Sorry PIN does not match']);
 			exit;
 			
 		}
@@ -210,8 +161,8 @@ class WebservicesController extends AppController
 				->set(['is_present_client' => '1'])
 				->where(['id' => $id])
 				->execute();
-
-		if(!empty($flag))
+		$update = $flag->rowCount();
+		if(!empty($update))
 		{
 			echo json_encode(['is_present'=>1,'msg'=>'Your presence registered successfully.']);
 			exit;
