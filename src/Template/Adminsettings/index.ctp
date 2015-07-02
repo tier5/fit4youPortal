@@ -28,33 +28,33 @@
                                 
                             <table class="table table-bordered">
                                 <thead>
-                                <tr>
-                                    <!--<th><input type="checkbox" class="utopia-check-all"></th>-->
-                                    <th><?= $this->Paginator->sort('name','Name') ?></th>
-                                    <th><?= $this->Paginator->sort('value','Value') ?></th>
-                                    <th class="actions"><?= __('Actions') ?></th>
-                                </tr>
+				    <tr>
+					<!--<th><input type="checkbox" class="utopia-check-all"></th>-->
+					<th><?= $this->Paginator->sort('name','Name') ?></th>
+					<th><?= $this->Paginator->sort('value','Value') ?></th>
+					<th class="actions"><?= __('Actions') ?></th>
+				    </tr>
                                 </thead>
 
 
                                 <tbody>    
-                                <?php if($allRecordCount > 0){ ?>
-                                <?php foreach ($settings as $setting): ?>
-                                <tr>
-                                    <td><?= h($setting['name']) ?></td>
-                                    <td><?= h($setting['value']); ?></td>
-                                    <td>
-                                        <a href="<?php echo BASE_URL; ?>administrator/settings/edit/<?php echo $setting['id']; ?>">Edit</a>
-                                        &nbsp;|&nbsp;
-                                        <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/settings/delete/<?php echo  $setting['id']; ?>">Delete</a>
-                                    </td>
-                                </tr>                                
-                                <?php endforeach; ?>
-                                <?php }else{ ?>
-                                <tr>
-                                    <td colspan="5">No Records.</td>
-                                </tr>  
-                                <?php } ?>
+				    <?php if($allRecordCount > 0){ ?>
+				    <?php foreach ($settings as $setting): ?>
+				    <tr>
+					<td><?= h($setting['name']) ?></td>
+					<td><?= h($setting['value']); ?></td>
+					<td>
+					    <a href="<?php echo BASE_URL; ?>administrator/settings/edit/<?php echo $setting['id']; ?>">Edit</a>
+					    &nbsp;|&nbsp;
+					    <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/settings/delete/<?php echo  $setting['id']; ?>">Delete</a>
+					</td>
+				    </tr>                                
+				    <?php endforeach; ?>
+				    <?php }else{ ?>
+				    <tr>
+					<td colspan="5">No Records.</td>
+				    </tr>  
+				    <?php } ?>
                                 </tbody>
 
                                 

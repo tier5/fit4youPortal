@@ -25,6 +25,7 @@
     </div>
 
     <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+    <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
@@ -85,4 +86,19 @@
         }
         return true;
     }
+</script>
+<script>
+
+$().ready(function() {
+
+        // validate signup form on keyup and submit
+        $("#addFrm").validate({
+                rules: {
+                        value: "required"
+                }
+        });
+
+		
+
+});
 </script>
