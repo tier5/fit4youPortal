@@ -79,3 +79,34 @@
 </section>
 
 </div>
+
+<script>
+
+$().ready(function() {
+
+        // validate signup form on keyup and submit
+        $("#changePassForm").validate({
+                rules: {
+                        gymName: "required",
+                        gymAddress: "required",
+                        gymPhone: "required",
+                        gymEmail: {
+                                required: true,
+                                email: true
+                        }
+                },
+                messages: {
+                        gymName: "Please enter gym name",
+                        gymAddress: "please enter gym address",
+                        gymPhone: "Please enter gym phone number",
+                        gymEmail: {
+                                required: "Please enter email ID",
+                                email: "Email ID not valid"
+                        }
+                }
+        });
+
+		
+
+});
+</script>
