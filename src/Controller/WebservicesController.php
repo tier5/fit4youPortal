@@ -45,17 +45,24 @@ class WebservicesController extends AppController
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '1'])
-				->where(['client_id' => $client_data['id'],'start_time >' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
+				->where(['start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
+				->orWhere(['start_time >=' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
+				->andWhere(['client_id' => $client_data['id']])
+				->andWhere(['status' => '0'])
 				->execute();
 			
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '0'])
-				->where(['client_id' => $client_data['id'],'start_time <' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes')) ])
+				->where(['start_time <' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
+				->orWhere(['start_time >' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))])
+				->andWhere(['client_id' => $client_data['id']])
 				->execute();
+				
 			
 			
-			$r=$this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s')],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+			$r=$this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+			//echo date('Y-m-d H:i:s');
 			$data = $r->toArray();
 			//$data = $arr->toArray();
 			
@@ -64,7 +71,6 @@ class WebservicesController extends AppController
 				$data['sucess'] = '1';
 				$start_time = get_object_vars($data['start_time']);
 				$end_time = get_object_vars($data['end_time']);
-				$data['status'] = '1';
 				$data['start_time'] =  $start_time['date'];
 				$data['end_time'] =  $end_time['date'];
 				$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
@@ -110,16 +116,22 @@ class WebservicesController extends AppController
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '1'])
-				->where(['trainer_id' => $trainer_data['id'],'start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' hours')) ])
+				->where(['start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
+				->orWhere(['start_time >=' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
+				->andWhere(['client_id' => $trainer_data['id']])
+				->andWhere(['status' => '0'])
 				->execute();
-				
+			
 			$query = $this->UserRelations->query();
 			$flag = $query->update()
 				->set(['status' => '0'])
-				->where(['trainer_id' => $trainer_data['id'],'end_time <' => date('Y-m-d H:i:s'), ])
+				->where(['start_time <' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
+				->orWhere(['start_time >' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))])
+				->andWhere(['trainer_id' => $trainer_data['id']])
 				->execute();
-				
-			$r=$this->UserRelations->find('all',array('conditions'=>['Trainer.userPin' => $pin, 'Trainer.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s')],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+			
+			
+			$r=$this->UserRelations->find('all',array('conditions'=>['Trainer.userPin' => $pin, 'Trainer.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
 			$data = $r->toArray();
 			//$data = $arr[0]->toArray();
 			if($data['id'])
@@ -127,7 +139,6 @@ class WebservicesController extends AppController
 				$data['sucess'] = '1';
 				$start_time = get_object_vars($data['start_time']);
 				$end_time = get_object_vars($data['end_time']);
-				$data['status'] = '1';
 				$data['start_time'] =  $start_time['date'];
 				$data['end_time'] =  $end_time['date'];
 				$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
@@ -153,18 +164,45 @@ class WebservicesController extends AppController
 	public function present()
 	{
 		$this->autoRender = false;
-		$this->loadModel('Users');
+		$this->loadModel('UserRelations');
 		$id = $this->request->data['id'];
 		
-		$query = $this->Users->query();
+		$query = $this->UserRelations->query();
 		$flag = $query->update()
-				->set(['is_present_client' => '1'])
+				->set(['status' => '2'])
 				->where(['id' => $id])
 				->execute();
 		$update = $flag->rowCount();
 		if(!empty($update))
 		{
 			echo json_encode(['is_present'=>1,'msg'=>'Your presence registered successfully.']);
+			exit;
+			
+		}
+		else
+		{
+			echo json_encode(['is_present'=>0,'msg'=>'Sorry there is some error.Try later']);
+			exit;
+			
+		}
+		
+	}
+	
+	public function missed()
+	{
+		$this->autoRender = false;
+		$this->loadModel('UserRelations');
+		$id = $this->request->data['id'];
+		
+		$query = $this->UserRelations->query();
+		$flag = $query->update()
+				->set(['status' => '3'])
+				->where(['id' => $id])
+				->execute();
+		$update = $flag->rowCount();
+		if(!empty($update))
+		{
+			echo json_encode(['is_present'=>2,'msg'=>'Missed.']);
 			exit;
 			
 		}
