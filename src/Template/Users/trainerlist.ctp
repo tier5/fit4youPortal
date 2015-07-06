@@ -39,8 +39,8 @@
                                 <tr>
                                     <!--<th><input type="checkbox" class="utopia-check-all"></th>-->
                                     <th><?= $this->Paginator->sort('role','Role') ?></th>
-                                    <th><?= $this->Paginator->sort('firstName','First Name') ?></th>
-                                    <th><?= $this->Paginator->sort('lastName','Last Name') ?></th>
+                                    <th><?= $this->Paginator->sort('userPin','Pin') ?></th>
+                                    <th><?= $this->Paginator->sort('fastName','Name') ?></th>
                                     <th><?= $this->Paginator->sort('join_date','Registration Date') ?></th>
                                     <th class="actions"><?= __('Actions') ?></th>
                                 </tr>
@@ -52,10 +52,12 @@
                                 <?php foreach ($users as $user): ?>
                                 <tr>
                                     <td><?= h($user->role) ?></td>
-                                    <td><?= h($user->regisNo) ?></td>
+                                    <td><?= h($user->userPin) ?></td>
                                     <td><?php echo $user->firstName.' '.$user->lastName; ?></td>
                                     <td><?= h(date('d-M-Y g:i A',strtotime($user->join_date))) ?></td>
                                     <td>
+                                    <a href="<?php echo BASE_URL; ?>administrator/user/profile/<?php echo $user->id; ?>" data-toggle="modal" data-target="#myModal">View Profile</a>
+                                        &nbsp;|&nbsp;
                                         <a href="<?php echo BASE_URL; ?>administrator/user/edit/<?php echo $user->id; ?>">Edit</a>
                                         &nbsp;|&nbsp;
                                         <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>admin/user/delete/<?php echo  $user->id; ?>">Delete</a>

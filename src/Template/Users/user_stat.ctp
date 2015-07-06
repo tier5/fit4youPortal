@@ -13,7 +13,7 @@
                 </div>
             </div>
     
-            <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+            <span style="color:green;" id="msg"><?php echo $this->Flash->render('positive') ?></span>
 
             <div class="row-fluid">
 
@@ -37,7 +37,7 @@
 					    <td><input type="text" value="" name="waist" placeholder="waist" id="waist" class="span10"></td>
 					    <td><input type="text" value="" name="biceps" placeholder="biceps" id="biceps" class="span10"></td>
 					    <td><input type="text" value="" name="triceps" placeholder="triceps" id="triceps" class="span10"></td>
-					    <td><input type="hidden" value="<?= $user_id;?>" name="user_id" id="user_id" class="span10" >
+					    <td><input type="hidden" value="<?php echo $user_id;?>" name="user_id" id="user_id" class="span10" >
 					    <input type="hidden" value="" name="id" id="id" class="span10" >
     <input type="button" value="Submit" name="submit" id="submit" class="span10"></td>
 				    </tr>                                
@@ -78,7 +78,7 @@
 					<td>
 					    <a href="javascript:void(0);" onclick="edit_stat('<?php echo $stat->id; ?>','<?php echo $stat->weight; ?>','<?php echo $stat->chest; ?>','<?php echo $stat->waist; ?>','<?php echo $stat->biceps; ?>','<?php echo $stat->triceps; ?>');">Edit</a>
 					    &nbsp;|&nbsp;
-					    <a onClick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete/<?php echo  $stat->id; ?>">Delete</a>
+					    <a onClick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete/<?php echo  $stat->id; ?>/<?php echo $user_id;?>">Delete</a>
 					</td>
 				    </tr>                                
 				    <?php endforeach; ?>
@@ -159,14 +159,16 @@ $(document).ready(function(){
 		var waist = $('#waist').val();
 		var biceps = $('#biceps').val();
 		var triceps = $('#triceps').val();
+		var id = $('#id').val();
 		$.ajax({
 			type: "post",
-			url: '<?php echo BASE_URL."administrator/user/userstat/".$user_id; ?>',
+			url: '<?php echo BASE_URL."administrator/user/userstat/"; ?>',
 			beforeSend: function(xhr) {
         		xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     		},
 			data: {
-				'user_id': '<?=$user_id;?>',
+				'user_id': '<?php echo $user_id;?>',
+				'id': id,
 				'weight': weight,
 				'chest': chest,
 				'waist': waist,
@@ -176,6 +178,7 @@ $(document).ready(function(){
 			},
 			success: function(data){
 				    $('#load_content').html(data);
+				    $('#msg').html('Data updated successfully');
 				    $('#weight').val('');
 				    $('#chest').val('');
 				    $('#waist').val('');
