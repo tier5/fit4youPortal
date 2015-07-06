@@ -577,7 +577,6 @@ public function userStat($user_id=NULL)
 	
 	if(!empty($postData['id']))
 	{
-		
 		$databaseArr = array(
 			'weight'     	=>  $postData['weight'],
 			'chest'		=>  $postData['chest'],
@@ -587,8 +586,15 @@ public function userStat($user_id=NULL)
 		);
 		
 		//$user = $this->UserStats->newEntity($postData);
-		$this->UserStats->update($databaseArr,['user_id' => $postData['user_id']]);
+		$query = $this->UserStats->query();	
+		$flag = $query->update()
+			->set($databaseArr)
+			->where(['id' => $postData['id']])
+			->execute();
 		$user_id = $postData['user_id'];
+		$this->Flash->success('Data updated successfully.', [
+		    'key' => 'positive'
+		]);
 		
 	}
 	else
@@ -596,6 +602,9 @@ public function userStat($user_id=NULL)
 		$user = $this->UserStats->newEntity($postData);
 		$this->UserStats->save($user);
 		$user_id = $postData['user_id'];
+		$this->Flash->success('Data added successfully.', [
+		    'key' => 'positive'
+		]);
 	}
 	
 		
@@ -633,52 +642,34 @@ public function logout()
 }
 
 
-public function delete($id=null)
+public function delete($id=null,$user_id=NULL)
 {   
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
-    $hasAccess = $this->hasAccess($adminDetls->id,'8','moduleDelete');
-    if($hasAccess=='0' && $adminDetls->id!='1'){
-        $this->Flash->success("You don't have access to this page.", [
-           'key' => 'positive'
-        ]);
-        $this->redirect(BASE_URL.'admin/dashboard');        
-    }
     
-    $this->loadModel('Users');
-    $this->loadModel('TeamPlayers');
-    $this->loadModel('TeamCoaches');
-    
-    $players = $this->TeamPlayers->find('all',[
-         'conditions' => [
-            'playerId'  => $id
-    ]]);
-    
-    $coaches = $this->TeamCoaches->find('all',[
-         'conditions' => [
-            'coachId'  => $id
-    ]]);
-    
-    if($players->count()==0 && $coaches->count()==0){
-       $databaseArr = array(
-           'is_active'     =>  '0',
-           'is_deleted'    =>  '1'
-       );
-       $users = $this->Users->get($id, [
-           'contain' => []
-       ]);
-       $users = $this->Users->patchEntity($users, $databaseArr);
-       $this->Users->save($users);
-       $this->Flash->success('The user has been deleted successfully.', [
-           'key' => 'positive'
-       ]);
-       return $this->redirect(BASE_URL.'admin/user');
-    }else{
-      $this->Flash->success('This user cannot be deleted as this user has already beeen appointed as player or coach.', [
-           'key' => 'positive'
-       ]);
-       return $this->redirect(BASE_URL.'admin/user');
-    }
+    $this->loadModel('UserStats');
+  
+	
+	$query = $this->UserStats->query();	
+	$flag = $query->delete()
+			->where(['id' => $id])
+			->execute();
+       
+       if($flag->rowCount()>0)
+       {
+
+		echo $this->Flash->success('The user has been deleted successfully.', [
+		    'key' => 'positive'
+		]);
+       }
+       else
+       {
+		echo $this->Flash->success('Data cannot be deleted.', [
+		    'key' => 'negetive'
+		]);
+	
+       }
+       return $this->redirect(BASE_URL.'administrator/user/userstat/'.$user_id);
     
     
 } 
