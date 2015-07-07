@@ -54,7 +54,7 @@ class AdminschedulesController extends AppController{
         $adminDetls = $session->read('admin.details');
         
         $this->loadModel('UserRelations');
-        //$this->loadModel('Modules');
+        $this->loadModel('Users');
         //$this->loadModel('ModulePermissions');
 
         $validationErrMsg = array();
@@ -68,6 +68,10 @@ class AdminschedulesController extends AppController{
         
         //$allModules = $this->Modules->find('all');  
         //$allModulesCount = $allModules->count();
+        $clients = $this->Users->find('all')->where(['role' => 'CLIENT']);
+        $totClients = $clients->count();
+        $trainers = $this->Users->find('all')->where(['role' => 'TRAINER']);
+        $totTrainer = $trainers->count();
         
         if($this->request->is('post'))
         {
@@ -95,10 +99,10 @@ class AdminschedulesController extends AppController{
             
         }
         
-        $this->set(array(
-            'validationErrMsg' =>  $validationErrMsg,
-            'fieldsValue' =>  $fieldsValue,
-        ));
+        $this->set('clients',$clients);
+        $this->set('totClients',$totClients);
+        $this->set('trainers',$trainers);
+        $this->set('totTrainer',$totTrainer);
     }
     
     
@@ -106,81 +110,61 @@ class AdminschedulesController extends AppController{
     {
        $session = $this->request->session();
         $adminDetls = $session->read('admin.details');
-        $this->set('active_class','schedule');
+        $this->set('active_class','schedule');    
+                
+        $this->loadModel('UserRelations');
+        $this->loadModel('Users');
         
-        /*$hasAccess = $this->hasAccess($adminDetls->id,'9','moduleEdit');
-        if($hasAccess=='0' && $adminDetls->id!='1'){
-            $this->Flash->success("You don't have access to this page.", [
-               'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'admin/dashboard');        
-        }*/
-       
-        if($check_role == 0)
-        {
-            $this->Flash->success('Unavailable Schedule.', [
-                   'key' => 'negative'
-                ]);
-            
-                $this->redirect(BASE_URL.'administrator/schedules');
-        }
-        else
-        {
-                /*$hasAccess = $this->hasAccess($adminDetls->id,'9','moduleEdit');
-                if($hasAccess=='0' && $adminDetls->id!='1'){
-                    $this->Flash->success("You don't have access to this page.", [
-                       'key' => 'positive'
-                    ]);
-                    $this->redirect('administrator/dashboard');        
-                }*/
-                
-                
-                $this->loadModel('UserRelations');
-                //$this->loadModel('Modules');
-                //$this->loadModel('ModulePermissions');
-                
-                $validationErrMsg = array();
-                $fieldsValue = array();
-                $hasError = 0;
-                //$connection = ConnectionManager::get('default');        
-                
-                $this->set('title',"Admin|Edit Schedule");
-                $this->set('description',"Admin|Edit Schedule");
-                $this->set('userRole',$adminDetls->role);              
-                
-            
-                $schedule = $this->Schedules->get($id, [
-                    'contain' => []
-                ]);        
+        $clients = $this->Users->find('all')->where(['role' => 'CLIENT']);
+        $totClients = $clients->count();
+        $trainers = $this->Users->find('all')->where(['role' => 'TRAINER']);
+        $totTrainer = $trainers->count();
+        
+        
+        $validationErrMsg = array();
+        $fieldsValue = array();
+        $hasError = 0;       
+        
+        $this->set('title',"Admin|Edit Schedule");
+        $this->set('description',"Admin|Edit Schedule");
+        $this->set('userRole',$adminDetls->role);              
+        
+    
+        $schedule = $this->UserRelations->get($id, [
+            'contain' => []
+        ]);        
+  
+        if ($this->request->is('post')) 
+        {  
+            $postData = $this->request->data;
           
-                if ($this->request->is('post')) 
-                {  
-                    $postData = $this->request->data;
-                  
-         
-                    
-                    
-                    $databaseArr = array(
-                        'client_id'     =>      $postData['client_id'],
-                        'trainer_id'    =>      $postData['trainer_id'],
-                        'start_time'    =>      $postData['start_time'],
-                        'end_time'      =>      $postData['end_time'],
-                        'is_active'     =>      $postData['is_active']
-                    ); 
-        
-                    $schedule = $this->UserRelations->patchEntity($schedule, $databaseArr);   
-                    $this->Roles->save($schedule);            
+ 
+            
+            
+            $databaseArr = array(
+                'client_id'     =>      $postData['client_id'],
+                'trainer_id'    =>      $postData['trainer_id'],
+                'start_time'    =>      $postData['start_time'],
+                'end_time'      =>      $postData['end_time'],
+                'status'        =>      $postData['status']
+            ); 
 
-                  
-                    $this->Flash->success('Roles has been updated successfully.', [
-                        'key' => 'positive'
-                    ]);
-                    $this->redirect(BASE_URL.'administrator/schedules/edit/'.$id);
-                }
-                
-                $this->set(compact('schedule'));
-                $this->set('_serialize', ['schedule']);
+            $this->UserRelations->update($databaseArr,['id' => $postData['id']]);
+	    $user_id = $postData['user_id'];        
+
+          
+            $this->Flash->success('Schedule has been updated successfully.', [
+                'key' => 'positive'
+            ]);
+            $this->redirect(BASE_URL.'administrator/schedules/edit/'.$id);
         }
+        
+        $this->set('clients',$clients);
+        $this->set('totClients',$totClients);
+        $this->set('trainers',$trainers);
+        $this->set('totTrainer',$totTrainer);
+        $this->set(compact('schedule'));
+        $this->set('_serialize', ['schedule']);
     }
     
     
@@ -205,7 +189,7 @@ class AdminschedulesController extends AppController{
         $this->Flash->success('Schedule has been deleted successfully.', [
             'key' => 'positive'
         ]);
-        return $this->redirect(BASE_URL.'administrator/schedules');
+        return $this->redirect(BASE_URL.'administrator/schedule');
         
     }
     

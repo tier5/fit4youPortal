@@ -4,7 +4,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Utility\Security;
-use Cake\Utility\Sendemail;
+use Cake\Network\Email\Email;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\I18n\Time;
 use Cake\Network\Request;
@@ -413,7 +413,8 @@ public function add()
             <a href="'.BASE_URL.'user-activation/'.$activationKey.'">Click Here </a>to activate your account.
             <br />
             <a href="'.BASE_URL.'user-login">Click Here </a>to login.<br />
-            <b>Email :</b> '.$postData['email'].'<br />
+            <b>Email :</b> '.$postData['username'].'<br />
+	    <b>Email :</b> '.$postData['email'].'<br />
             <b>Password :</b> '.$postData['password'].'
             <br /><br />
             Regards,<br />
@@ -424,14 +425,19 @@ public function add()
             //echo $mailBody;exit;
             $to = $postData['email'];
             $subject = $postData['role']." Registration";
-            $sendemail = new Sendemail(); 
-            $sendemail->send($to,$mailBody,$subject);
+	    //echo mail($to,$subject,$mailBody);
+	    $email = new Email('default');
+			$email->from(['santu@unifiedinfotech.net' => 'Fit4You.com'])
+			->to($to)
+			->subject($subject)
+			->send($mailBody);
+
             
             
             $this->Flash->success('The user has been saved', [
                 'key' => 'positive'
             ]);
-            $this->redirect(BASE_URL.'administrator/user');
+            $this->redirect(BASE_URL.'administrator/user/add');
     }
    
     $this->set(array(
@@ -521,31 +527,29 @@ public function trainerlist()
 	
 }
 
-public function userProfile($id=null)
+public function userProfile()
 {
-   $this->set('active_class','user');
-    $session = $this->request->session();
-    $adminDetls = $session->read('admin.details');
+	
+	$this->request->allowMethod(['ajax']);
+	$this->layout = 'ajax';
+	$this->set('active_class','user');
+	$session = $this->request->session();
+	$adminDetls = $session->read('admin.details');
+	
+	$user_id = $this->request->data['user_id'];
 
-    $this->loadComponent('ImageTransform');
-    $this->loadModel('Users');
+	$this->loadModel('Users');
 
-    $validationErrMsg = array();
-    $fieldsValue = array();
-    $organisationTeams = array();
-    $hasError = 0;
-    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
-
-
-    $this->set('title',"Admin|View Client Profile");
-    $this->set('description','View Client Profile');
-    $this->set('userRole',$adminDetls->role);
-    $user = $this->Users->get($id, [
-        'contain' => []
-    ]);
-    
-    $this->set(compact('user'));
-    $this->set('_serialize', ['user']);
+	$this->set('title',"Admin|View Client Profile");
+	$this->set('description','View Client Profile');
+	$this->set('userRole',$adminDetls->role);
+	$userData = $this->Users->get($user_id, [
+	    'contain' => []
+	]);
+	
+	$this->set(compact('userData'));
+	$this->set('_serialize', ['userData']);
+	$this->render('ajax/user_profile');
 }
 
 public function userStat($user_id=NULL)
@@ -641,8 +645,71 @@ public function logout()
     $this->redirect(BASE_URL.'administrator');
 }
 
+public function deleteClient($id=null)
+{   
+    $session = $this->request->session();
+    $adminDetls = $session->read('admin.details');
+    
+    $this->loadModel('Users');
+  
+	
+	$query = $this->Users->query();	
+	$flag = $query->delete()
+			->where(['id' => $id])
+			->execute();
+       
+       if($flag->rowCount()>0)
+       {
 
-public function delete($id=null,$user_id=NULL)
+		echo $this->Flash->success('The user has been deleted successfully.', [
+		    'key' => 'positive'
+		]);
+       }
+       else
+       {
+		echo $this->Flash->success('Data cannot be deleted.', [
+		    'key' => 'negetive'
+		]);
+	
+       }
+       return $this->redirect(BASE_URL.'administrator/client/');
+    
+    
+}
+
+public function deleteTrainer($id=null)
+{   
+    $session = $this->request->session();
+    $adminDetls = $session->read('admin.details');
+    
+    $this->loadModel('Users');
+  
+	
+	$query = $this->Users->query();	
+	$flag = $query->delete()
+			->where(['id' => $id])
+			->execute();
+       
+       if($flag->rowCount()>0)
+       {
+
+		echo $this->Flash->success('The user has been deleted successfully.', [
+		    'key' => 'positive'
+		]);
+       }
+       else
+       {
+		echo $this->Flash->success('Data cannot be deleted.', [
+		    'key' => 'negetive'
+		]);
+	
+       }
+       return $this->redirect(BASE_URL.'administrator/trainer/');
+    
+    
+}
+
+public function deleteStat($id=null,$user_id=NULL)
 {   
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
@@ -675,8 +742,151 @@ public function delete($id=null,$user_id=NULL)
 } 
 
 
+public function changePassword()
+{
+	$this->set('active_class','');
+	$session = $this->request->session();
+	$adminDetls = $session->read('admin.details');
+        $this->set('title',"Admin|Change Password");
+        $this->set('description','Admin|Change Password');
+        $this->set('userRole',$adminDetls->role);
+	
+	if($this->request->is('post'))
+	{
+		
+		$oldPassword = $this->request->data['oldPassword'];
+		$newPassword = $this->request->data['newPassword'];
+		$query=$this->Users->findById($adminDetls->id);
+		$main_pass=$query->first();
+		$hasher = new DefaultPasswordHasher();
+		$check = $hasher->check($oldPassword,$main_pass->password);
+		if($check==1) {
+		     $newPassword=$hasher->hash($newPassword);
+		     ;
+		     
+			    if ($this->Users->updateAll(["password"=>$newPassword],["id"=>$adminDetls->id])) {
+				$this->Flash->success('Successfully change password.', [
+			    'key' => 'positive'
+			]);
+			    } else {
+				$this->Flash->error('Unable to change.', [
+			    'key' => 'positive'
+			]);
+			    }
+		}else {
+		     $this->Flash->success('Old password incorrect.', [
+		    'key' => 'negetive'
+		]);
+		}
+	}
+	
+	
+}
+
+public function adminProfile()
+{
+	
+	Time::setToStringFormat('YYYY-MM-dd h:i:s');
+	$this->set('active_class','user');
+	$session = $this->request->session();
+	$adminDetls = $session->read('admin.details');
+    
+	$this->loadComponent('ImageTransform');
+	$this->loadModel('Users');
+    
+    
+	$this->set('title',"Admin|Admin Profile");
+	$this->set('description','Edit Admin Profile');
+	$this->set('userRole',$adminDetls->role);
+	$users = $this->Users->get($adminDetls->id, [
+	    'contain' => []
+	]);
+   
+    if ($this->request->is('post'))
+    {      
+        $postData = $this->request->data; 
+        
+        if($_FILES['usersImage']['name']!=''){
+            $fileName = $_FILES['usersImage']['name'];
+            $fileNameArr = explode(".",$fileName);
+            $fileNameArrCnt = count($fileNameArr);
+            $extn = $fileNameArr[$fileNameArrCnt-1];
+            $extn = strtolower($extn);
+        }
+
+        
+            //$postData = $this->request->data;            
+
+            if($_FILES['usersImage']['name']!='')
+            {
+		
+		$targetPath = './uploads/images/users_profile/';
+		$imageName = time().rand(0,100);
+		$up=$this->ImageTransform->upload("usersImage",$targetPath,$imageName);
+		if($up)
+		{
+		    chmod($targetPath.$imageName.'.'.$extn,0777);                    
+		    $this->ImageTransform->setQuality(100);
+		    $this->ImageTransform->resize($this->ImageTransform->main_src,100,100, './uploads/images/users_profile/thumb/'.$this->ImageTransform->main_img);
+		}
+	    
+                $databaseArr = array(
+			'username'          =>      $postData['username'],
+			'firstName'         =>      $postData['firstName'],
+			'lastName'          =>      $postData['lastName'],
+			'userPin'           =>      $postData['userPin'],
+			'email'             =>      $postData['email'],
+			'phone'             =>      $postData['phone'],
+			'city'              =>      $postData['city'],
+			'state'             =>      $postData['state'],
+			'country'           =>      $postData['country'],
+			'zip'               =>      $postData['zip'],
+			'address'           =>      $postData['address'],
+			'photo'             =>      $imageName.'.'.$extn,
+			'update_date'	    =>      Time::now(),
+			'is_login'          =>      '1',
+			'is_active'         =>      '1',
+			'is_deleted'        =>      '0'
+		);    
+            }
+            else
+            {
+		
+		$databaseArr = array(
+
+			'username'          =>      $postData['username'],
+			'firstName'         =>      $postData['firstName'],
+			'lastName'          =>      $postData['lastName'],
+			'userPin'           =>      $postData['userPin'],
+			'email'             =>      $postData['email'],
+			'phone'             =>      $postData['phone'],
+			'city'              =>      $postData['city'],
+			'state'             =>      $postData['state'],
+			'country'           =>      $postData['country'],
+			'zip'               =>      $postData['zip'],
+			'address'           =>      $postData['address'],
+			'update_date'	    =>      Time::now(),
+			'is_login'          =>      '1',
+			'is_active'         =>      '1',
+			'is_deleted'        =>      '0'
+		);
+		
+            }
+
+            $users = $this->Users->patchEntity($users, $databaseArr);
+            $this->Users->save($users);
+            $this->Flash->success('Profile has been updated', [
+                'key' => 'positive'
+            ]);
+            return $this->redirect(BASE_URL.'administrator/admin-profile');
 
 
+    }    
+    
+    $this->set(compact('users'));
+    $this->set('_serialize', ['users']);
+	
+}
 
 /////////// ---> defining authorized pages
 
@@ -684,7 +894,7 @@ public function isAuthorized($user)
 {
      $action = $this->request->params['action'];
      // The add and index actions are always allowed.
-     if (in_array($action, ['index', 'dashboard','logout','add','userlist','trainerlist','edit','delete','userProfile','userStat'])) {
+     if (in_array($action, ['index', 'dashboard','logout','add','userlist','trainerlist','edit','delete','userProfile','userStat','changePassword','adminProfile','deleteClient','deleteTrainer','deleteStat'])) {
      return true;
      }
      // All other actions require an id.
