@@ -1,10 +1,10 @@
-<div class="body-container span10">
+<div class="body-container span10 new-modal4Area">
 
             <div class="row-fluid">
                 <div class="span12">
                     <ul class="breadcrumb">
                         <li>
-                            <a href="<?php echo BASE_URL; ?>admin/dashboard">Admin</a> <span class="divider">/</span>
+                            <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
                             <a href="">Trainer</a> <span class="divider">/</span>
@@ -56,11 +56,11 @@
                                     <td><?php echo $user->firstName.' '.$user->lastName; ?></td>
                                     <td><?= h(date('d-M-Y g:i A',strtotime($user->join_date))) ?></td>
                                     <td>
-                                    <a href="<?php echo BASE_URL; ?>administrator/user/profile/<?php echo $user->id; ?>" data-toggle="modal" data-target="#myModal">View Profile</a>
+                                    <a href="<?php echo BASE_URL; ?>administrator/user/profile/<?php echo $user->id; ?>" onclick="javascript:viewProfile('<?php echo $user->id; ?>');" data-modal-id="popup" class="js-open-modal">View Profile</a>
                                         &nbsp;|&nbsp;
                                         <a href="<?php echo BASE_URL; ?>administrator/user/edit/<?php echo $user->id; ?>">Edit</a>
                                         &nbsp;|&nbsp;
-                                        <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>admin/user/delete/<?php echo  $user->id; ?>">Delete</a>
+                                        <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete-trainer/<?php echo  $user->id; ?>">Delete</a>
                                     </td>
                                 </tr>                                
                                 <?php endforeach; ?>
@@ -93,7 +93,18 @@
                     </section>
                 </div>
             </div>
+            <div id="popup" class="modal-box">  
+                       <header>
+                         <a href="#" class="js-modal-close close">×</a>
+                         <h3><a href="#">Trainer</a> Profile</h3>
+                       </header>
+                       <div class="modal-body" id="user_profile">
 
+                     </div>
+                       <footer>
+                         <a href="#" class="js-modal-close">Close</a>
+                       </footer>
+            </div>
 
 
 </div>
@@ -110,42 +121,25 @@
     }
 </script>
 
-<?php /*<table cellpadding="0" cellspacing="0">
-    <thead>
-        <tr>
-            <th><?= $this->Paginator->sort('organisationType') ?></th>
-            <th><?= $this->Paginator->sort('organisationName') ?></th>
-            <th><?= $this->Paginator->sort('organisationAddress') ?></th>
-            <th><?= $this->Paginator->sort('organisationPhone') ?></th>
-            <th><?= $this->Paginator->sort('organisationEmail') ?></th>
-            <th class="actions"><?= __('Actions') ?></th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($organisations as $organisation): ?>
-        <tr>
-            <td><?= h($organisation->organisationType) ?></td>
-            <td><?= h($organisation->organisationName) ?></td>
-            <td><?= h($organisation->organisationAddress) ?></td>
-            <td><?= h($organisation->organisationPhone) ?></td>
-            <td><?= h($organisation->organisationEmail) ?></td>
-            <td class="actions">
-                <?= $this->Html->link(__('View'), ['action' => 'view', $organisation->id]) ?>
-                <?= $this->Html->link(__('Edit'), ['action' => 'edit', $organisation->id]) ?>
-                <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $organisation->id], ['confirm' => __('Are you sure you want to delete # {0}?', $organisation->id)]) ?>
-            </td>
-        </tr>
+<script type="text/javascript">
+function viewProfile(user_id)
+{
+            $.ajax({
+                        type: "post",
+                        url: '<?php echo BASE_URL."administrator/user/user-profile"; ?>',
+                        data: {
+                                'user_id': user_id
+                        },
+                        success: function(data){
+                                    $('#user_profile').html(data);
+                        },
+                        error: function(e){
+                                console.log(e);
+                        }
+                    
 
-    <?php endforeach; ?>
-    </tbody>
-    </table>
+    
+            });
 
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-        </ul>
-        <p><?= $this->Paginator->counter() ?></p>
-    </div>*/ ?>
-
+}
+</script>

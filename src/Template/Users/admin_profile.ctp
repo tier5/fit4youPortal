@@ -32,19 +32,6 @@
             <div class="span6 utopia-form-freeSpace">
                 <form class="form-horizontal" name="addFrm" id="addFrm" action="" method="post" enctype="multipart/form-data">
                     <fieldset>
-                        
-                        <div class="control-group" style="display:block;">
-                            <label for="select01" class="control-label">User Roles<span style="color:#ff0000;">*</span></label>
-                                
-                            <div class="controls">
-                                <select class="span6" id="role" name="role">
-                                    <option value="">--Select--</option> 
-                                    <?php foreach($allRoles as $val){ ?>
-                                    <option <?php echo $users['role']==$val->roleName ? "selected='selected'" : "" ?> value="<?php echo $val->roleName; ?>"><?php echo $val->roleName; ?></option> 
-                                    <?php } ?>
-                                </select>                              
-                            </div>
-                        </div>
 
                         <div class="control-group" style="display: block;">
                             <label for="input01" class="control-label">User Pin Code<span style="color:#ff0000;">*</span></label>
@@ -59,22 +46,6 @@
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['username']; ?>" name="username" id="username" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Password</label>
-
-                            <div class="controls">
-                                <input type="password" name="password" id="password" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Confirm Password</label>
-
-                            <div class="controls">
-                                <input value="" type="password" value="" name="confirm_password" id="confirm_password" class="span10" id="input01">
                             </div>
                         </div>
                         
@@ -166,30 +137,12 @@
                                 <input type="file" name="usersImage" id="usersImage">
                             </div>
                         </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Active<span style="color:#ff0000;"></span></label>
-
-                            <div class="controls">
-                                <input type="radio" name="is_active" value="1" <?php if($users['is_active'] == '1'){?> checked <?php }?> id="is_active">&nbsp;Yes&nbsp;
-                                <input type="radio" name="is_active" value="0" <?php if($users['is_active'] == '0'){?> checked <?php }?> id="is_active">&nbsp;No&nbsp;
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Loged in<span style="color:#ff0000;"></span></label>
-
-                            <div class="controls">
-                                <input type="radio" name="is_login" value="1" <?php if($users['is_login'] == '1'){?> checked <?php }?> id="is_active">&nbsp;Yes&nbsp;&nbsp;
-                                <input type="radio" name="is_login" value="0" <?php if($users['is_login'] == '0'){?> checked <?php }?> id="is_active">&nbsp;No&nbsp;&nbsp;
-                            </div>
-                        </div>
 
                         <div class="control-group">
                             <label for="input01" class="control-label"></label>
 
                             <div class="controls">
-                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" id="input01">
+                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" class="span10" id="input01">
                             </div>
                         </div>
                        
@@ -221,7 +174,6 @@ $().ready(function() {
         // validate signup form on keyup and submit
         $("#addFrm").validate({
                 rules: {
-                        role: "required",
                         userPin: "required",
                         firstName: "required",
                         lastName: "required",
@@ -229,9 +181,6 @@ $().ready(function() {
                                 required: true,
                                 minlength: 4,
                                 maxlength: 14
-                        },
-                        confirm_password: {
-                            equalTo: "#password"
                         },
                         email: {
                                 required: true,

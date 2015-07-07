@@ -73,6 +73,14 @@
                             </div>
                         </div>
                         
+                        <div class="control-group" style="display: block;">
+                            <label for="input01" class="control-label">Confirm Password<span style="color:#ff0000;">*</span></label>
+
+                            <div class="controls">
+                                <input value="" type="password" value="" name="confirm_password" id="confirm_password" class="span10" id="input01">
+                            </div>
+                        </div>
+                        
                         <div class="control-group">
                             <label for="input01" class="control-label">First Name<span style="color:#ff0000;">*</span></label>
 
@@ -159,7 +167,7 @@
                             <label for="input01" class="control-label"></label>
 
                             <div class="controls">
-                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" class="span10" id="input01">
+                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>
                        
@@ -217,6 +225,11 @@ $().ready(function() {
                                 minlength: 6,
                                 maxlength: 20
                         },
+                        confirm_password: {
+                                required: true,
+                                equalTo: '#password'
+                        },
+                        
                         email: {
                                 required: true,
                                 email: true
@@ -242,6 +255,11 @@ $().ready(function() {
                                 required: "Please provide a password",
                                 minlength: "Your password must be at least 6 characters",
                                 maxlength: "Your password must consist less or equal 20 characters"
+                        },
+                        
+                        confirm_password: {
+                                required: "Please enter confirm password",
+                                equalTo: 'Password does not match'
                         },
                         
                         email: {

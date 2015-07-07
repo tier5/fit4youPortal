@@ -4,7 +4,7 @@
                 <div class="span12">
                     <ul class="breadcrumb">
                         <li>
-                            <a href="<?php echo BASE_URL; ?>admin/dashboard">Admin</a> <span class="divider">/</span>
+                            <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
                             <a href="">User Stats</a> <span class="divider">/</span>
@@ -39,7 +39,7 @@
 					    <td><input type="text" value="" name="triceps" placeholder="triceps" id="triceps" class="span10"></td>
 					    <td><input type="hidden" value="<?php echo $user_id;?>" name="user_id" id="user_id" class="span10" >
 					    <input type="hidden" value="" name="id" id="id" class="span10" >
-    <input type="button" value="Submit" name="submit" id="submit" class="span10"></td>
+    <input type="button" value="Submit" name="submit" id="submit"></td>
 				    </tr>                                
                                 </tbody>
                                 
@@ -78,7 +78,7 @@
 					<td>
 					    <a href="javascript:void(0);" onclick="edit_stat('<?php echo $stat->id; ?>','<?php echo $stat->weight; ?>','<?php echo $stat->chest; ?>','<?php echo $stat->waist; ?>','<?php echo $stat->biceps; ?>','<?php echo $stat->triceps; ?>');">Edit</a>
 					    &nbsp;|&nbsp;
-					    <a onClick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete/<?php echo  $stat->id; ?>/<?php echo $user_id;?>">Delete</a>
+					    <a onClick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete-stat/<?php echo  $stat->id; ?>/<?php echo $user_id;?>">Delete</a>
 					</td>
 				    </tr>                                
 				    <?php endforeach; ?>
@@ -122,7 +122,7 @@
 						</select>
 				    </div>
 				    <div style="clear:both;"></div>
-				    <div id="curve_chart" style="width: 100%; height: 500px;"></div>
+				    <div id="curve_chart" style=""></div>
 					    
 				    			
 				    
@@ -298,6 +298,7 @@ $(function(){
 		      <?php endforeach; ?>
 		    ]);
 	}
+        
     
 		    var options = {
 		      title: 'Improvment Chart',
@@ -310,5 +311,6 @@ $(function(){
 		    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
     
 		    chart.draw(data, options);
+                    $('#curve_chart').css('height','200');
   }
 </script>
