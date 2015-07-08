@@ -7,17 +7,13 @@
                 <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="<?php echo BASE_URL; ?>administrator/user">User</a> <span class="divider">/</span>
-            </li>
-            <li>
-                <a href="">Add</a> <span class="divider"></span>
+                Add User
             </li>
         </ul>
     </div>
 </div>
    
-    
- 
+    <span class="msg_class"><?= $this->Flash->render('negative') ?></span>
 
 <section class="utopia-widget utopia-form-box section" id="formElement">
     <div class="utopia-widget-title">
@@ -26,9 +22,6 @@
         <span>Add User Details</span>
     </div>
 
-    
-    <span style="color:green; font-size:18px; padding-top:10px;"><?= $this->Flash->render('positive') ?></span>
-    <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
     <div class="row-fluid">
         <div class="utopia-widget-content">
             <div class="span6 utopia-form-freeSpace">
@@ -56,31 +49,7 @@
                                 <input value="" type="text" value="" name="userPin" id="userPin" class="span10" id="input01">
                             </div>
                         </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Username<span style="color:#ff0000;">*</span></label>
 
-                            <div class="controls">
-                                <input value="" type="text" value="" name="username" id="username" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Password<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <input value="" type="password" value="" name="password" id="password" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Confirm Password<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <input value="" type="password" value="" name="confirm_password" id="confirm_password" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
                         <div class="control-group">
                             <label for="input01" class="control-label">First Name<span style="color:#ff0000;">*</span></label>
 
@@ -98,7 +67,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Email<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Email</label>
 
                             <div class="controls">
                                 <input type="text" value="" name="email" id="email" class="span10" id="input01"> 
@@ -106,7 +75,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Phone<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Phone</label>
 
                             <div class="controls">
                                 <input type="text" value="" name="phone" id="phone" class="span10" id="input01"> 
@@ -114,39 +83,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">City<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <input type="text" value="" name="city" id="city" class="span10" id="input01"> 
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">State<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <input type="text" value="" name="state" id="state" class="span10" id="input01"> 
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Country<span style="color:#ff0000;">*</span></label>
-                            
-                            <div class="controls">
-                                <input type="text" value="" name="country" id="country" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Zip<span style="color:#ff0000;">*</span></label>
-                            
-                            <div class="controls">
-                                <input type="text" value="" name="zip" id="zip" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Address<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Address</label>
 
                             <div class="controls">
                                 <textarea class="span10" name="address" id="address"></textarea> 
@@ -154,7 +91,31 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Image<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">City</label>
+
+                            <div class="controls">
+                                <input type="text" value="" name="city" id="city" class="span10" id="input01"> 
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="input01" class="control-label">State</label>
+
+                            <div class="controls">
+                                <input type="text" value="" name="state" id="state" class="span10" id="input01"> 
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="input01" class="control-label">Zip</label>
+                            
+                            <div class="controls">
+                                <input type="text" value="" name="zip" id="zip" class="span10" id="input01">
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="input01" class="control-label">Image</label>
 
                             <div class="controls">
                                 <input type="file" name="usersImage" id="usersImage">
@@ -168,6 +129,7 @@
 
                             <div class="controls">
                                 <input type="submit" value="Submit" name="submitBtn" id="submitBtn" id="input01">
+                                <input type="button" value="Cancel" onclick="javascript:history.go(-1);" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>
                        
@@ -212,66 +174,29 @@ $().ready(function() {
         $("#addFrm").validate({
                 rules: {
                         role: "required",
-                        userPin: "required",
+                        userPin: {required: true, minlength: 4, maxlength: 6, number: true},
                         firstName: "required",
                         lastName: "required",
-                        username: {
-                                required: true,
-                                minlength: 4,
-                                maxlength: 14
-                        },
-                        password: {
-                                required: true,
-                                minlength: 6,
-                                maxlength: 20
-                        },
-                        confirm_password: {
-                                required: true,
-                                equalTo: '#password'
-                        },
                         
                         email: {
-                                required: true,
                                 email: true
                         },
-                        phone: "required",
-                        city: "required",
-                        state: "required",
-                        country: "required",
-                        zip: "required",
-                        address: "required"
+                        phone: { phoneUS: true},
+                        city: {lettersonly: true},
+                        state: {lettersonly: true}
                 },
                 messages: {
                         role: "Please select user role",
-                        userPin: "please enter user PIN",
+                        userPin: {required: "Please enter user PIN", minlength: "Please enter PIN with in 4-6 digits", maxlength: "Please enter PIN with in 4-6 digits", number: "Please enter valid PIN"},
                         firstName: "Please enter user's firstname",
                         lastName: "Please enter user's lastname",
-                        username: {
-                                required: "Please enter a username",
-                                minlength: "Your username must consist of at least 4 characters",
-                                maxlength: "Your username must consist less or equal 14 characters"
-                        },
-                        password: {
-                                required: "Please provide a password",
-                                minlength: "Your password must be at least 6 characters",
-                                maxlength: "Your password must consist less or equal 20 characters"
-                        },
-                        
-                        confirm_password: {
-                                required: "Please enter confirm password",
-                                equalTo: 'Password does not match'
-                        },
                         
                         email: {
-                                required: "Please enter email ID",
                                 email: "Email ID not valid"
                         },
-                        phone: "Please enter phone number",
-                        city: "Please enter city",
-                        state: "Please enter state",
-                        country: "Please enter country",
-                        zip: "Please enter zip",
-                        address: "Please enter address"
+                        phone: { phoneUS: "Please enter US phone number only"},
+                        city: {lettersonly: "Please enter correct city name"},
+                        state: {lettersonly: "Please enter correct state name"}
                 }
         });
 

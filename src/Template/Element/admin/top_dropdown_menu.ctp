@@ -9,11 +9,8 @@
 
                             <div class="user-dropbox">
                                 <ul>
-                                    <li class="user"><a href="#">Profile</a></li>
-                                    <li class="settings"><!--<a href="#">Change Password</a>-->
-                                    <?php echo $this->Html->link('Change Password', array('controller'=>'Adminchangepass','action'=>'index','admin' => TRUE)); ?>
-                                    
-                                    </li>
+                                    <li class="user"><a href="<?php echo BASE_URL.'administrator/admin-profile';?>">Profile</a></li>
+                                    <li class="settings"><a href="<?php echo BASE_URL.'administrator/change-password';?>">Change Password</a></li>
                                     <li class="settings">
                                         <?php echo $this->Html->link('Logout', array('controller'=>'Users','action'=>'logout','admin' => TRUE)); ?>
                                     </li>

@@ -8,6 +8,10 @@
             <td width="70%" id="name"><?php echo $userData->firstName;?> <?php echo $userData->lastName;?></td>
         </tr>
         <tr>
+                <td width="30%">PIN</td>
+            <td width="70%" id="name"><?php echo $userData->userPin;?></td>
+        </tr>
+        <tr>
                 <td width="30%">E-mail</td>
             <td width="70%" id="email"><?php echo $userData->email;?></td>
         </tr>
@@ -17,8 +21,7 @@
         </tr>
         <tr>
                 <td width="30%">Address</td>
-            <td width="70%" id="address"><?php echo $userData->address;?><br />
-    28036</td>
+            <td width="70%" id="address"><?php echo $userData->address;?></td>
         </tr>
         <tr>
                 <td width="30%">City</td>
@@ -27,10 +30,6 @@
         <tr>
                 <td width="30%">State</td>
             <td width="70%" id="state"><?php echo $userData->state;?></td>
-        </tr>
-        <tr>
-                <td width="30%">Contry</td>
-            <td width="70%" id="country"><?php echo $userData->country;?></td>
         </tr>
         <tr>
                 <td width="30%">Zip</td>

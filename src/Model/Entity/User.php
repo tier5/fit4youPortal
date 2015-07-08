@@ -30,6 +30,7 @@ class User extends Entity
         'password' => true,
         'firstName' => true,
         'lastName' => true,
+	'userPin' => true,
         'email' => true,
         'phone' => true,
         'address' => true,

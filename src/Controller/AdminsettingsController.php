@@ -76,9 +76,10 @@ class AdminsettingsController extends AppController{
             $postData = $this->request->data;
 
             $databaseArr = array(
-                'name'       =>      $postData['name'],
-                'value'      =>      $postData['value'],
-                'status'     =>      $postData['status']
+                'name'          =>      $postData['name'],
+                'description'   =>      $postData['description'],
+                'value'         =>      $postData['value'],
+                'status'        =>      $postData['status']
             ); 
 
             $setting = $this->Sitesettings->patchEntity($setting, $databaseArr);   
@@ -88,7 +89,7 @@ class AdminsettingsController extends AppController{
             $this->Flash->success('Setting has been updated successfully.', [
                 'key' => 'positive'
             ]);
-            $this->redirect(BASE_URL.'administrator/settings/edit/'.$id);
+            $this->redirect(BASE_URL.'administrator/settings');
         }
         
         $this->set(compact('setting'));

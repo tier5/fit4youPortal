@@ -7,13 +7,13 @@
                             <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
-                            <a href="">Client</a> <span class="divider">/</span>
+                            Client List
                         </li>
                     </ul>
                 </div>
             </div>
     
-            <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+            <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
 
             <div class="row-fluid">
 
@@ -91,7 +91,7 @@
             <div id="popup" class="modal-box">  
                         <header>
                           <a href="#" class="js-modal-close close">×</a>
-                          <h3><a href="#">Client</a> Profile</h3>
+                          <h3>Client Profile</h3>
                         </header>
                         <div class="modal-body" id="user_profile">
 

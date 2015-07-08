@@ -7,7 +7,7 @@
                             <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
-                            <a href="">Gyms</a> <span class="divider">/</span>
+                            Gyms
                         </li>
                     </ul>
                 </div>
@@ -21,13 +21,13 @@
                         }
                     </style>
             <script type="text/javascript">
-            $(document).ready(function(){
-                        $('#pageLabelDiv').click(function(){
-                            $('.utopia-widget-content').show().stop();
+			$(document).ready(function(){
+				    $('#pageLabelDiv').click(function(){
+					$('.utopia-widget-content').show().stop();
+				    });
                         });
-                        });
-</script>
-
+	    </script>
+	    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
             <div class="row-fluid">
 
                 <div class="span12">
@@ -35,8 +35,9 @@
                         <div class="utopia-widget-title" id="pageLabelDiv">
                             <img class="utopia-widget-icon" src="<?php echo BASE_URL; ?>backend/img/icons/paragraph_justify.png">
                             <span>Gym List</span>
+			    <span class="new_span_class"><a href="<?php echo BASE_URL; ?>administrator/gyms/add"><i class="fa fa-pencil"></i>  Add Gym</a></span>
                         </div>
-
+	    
                         <div class="utopia-widget-content">
                         
                         <script type="text/javascript">

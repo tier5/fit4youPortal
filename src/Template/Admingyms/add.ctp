@@ -7,10 +7,7 @@
                 <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="<?php echo BASE_URL; ?>administrator/organisation">Gym</a> <span class="divider">/</span>
-            </li>
-            <li>
-                <a href="">Add</a> <span class="divider"></span>
+                Add Gym
             </li>
         </ul>
     </div>
@@ -20,10 +17,10 @@
     <div class="utopia-widget-title">
         <?php echo $this->Html->image('../backend/img/icons2/software24.png',array("class" => "utopia-widget-icon"));?>
         <!--<img class="utopia-widget-icon" src="../backend/img/icons2/software24.png">-->
-        <span>Gym Details</span>
+        <span>Add Gym</span>
     </div>
 
-    <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
@@ -39,8 +36,8 @@
                             </div>
                         </div>
                         
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Gym Address<span style="color:#ff0000;">*</span></label>
+			<div class="control-group">
+                            <label for="input01" class="control-label">Address</label>
 
                             <div class="controls">
                                 <textarea name="gymAddress" id="gymAddress" class="span10"></textarea>
@@ -48,7 +45,31 @@
                         </div>
 			
 			<div class="control-group">
-                            <label for="input01" class="control-label">Gym Email<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">City</label>
+
+                            <div class="controls">
+                                <input type="text" value="" name="gymCity" id="gymCity" class="span10" id="input01">
+                            </div>
+                        </div>
+			
+			<div class="control-group">
+                            <label for="input01" class="control-label">State</label>
+
+                            <div class="controls">
+                                <input type="text" value="" name="gymState" id="gymState" class="span10" id="input01">
+                            </div>
+                        </div>
+			
+			<div class="control-group">
+                            <label for="input01" class="control-label">Zip</label>
+
+                            <div class="controls">
+                                <input type="text" value="" name="gymZip" id="gymZip" class="span10" id="input01">
+                            </div>
+                        </div>
+			
+			<div class="control-group">
+                            <label for="input01" class="control-label">Email</label>
 
                             <div class="controls">
                                 <input type="text" value="" name="gymEmail" id="gymEmail" class="span10" id="input01">
@@ -56,7 +77,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Gym Phone<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Phone</label>
 
                             <div class="controls">
                                 <input type="text" value="" name="gymPhone" id="gymPhone" class="span10" id="input01">
@@ -67,7 +88,8 @@
                             <label for="input01" class="control-label"></label>
 
                             <div class="controls">
-                                <input type="submit" value="Submit" name="confirmPassword" id="confirmPassword" class="span10" id="input01">
+                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" id="input01">
+				<input type="button" value="Cancel" onclick="javascript:history.go(-1);" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>
                        
@@ -90,19 +112,17 @@ $().ready(function() {
         $("#addFrm").validate({
                 rules: {
                         gymName: "required",
-                        gymAddress: "required",
-                        gymPhone: "required",
-                        gymEmail: {
-                                required: true,
-                                email: true
-                        }
+                        gymCity: {lettersonly: true},
+                        gymState: {lettersonly: true},
+                        gymPhone: { phoneUS: true},
+                        gymEmail: { email: true}
                 },
                 messages: {
                         gymName: "Please enter gym name",
-                        gymAddress: "please enter gym address",
-                        gymPhone: "Please enter gym phone number",
+                        gymCity: {lettersonly: "Please enter valid city name"},
+                        gymState: {lettersonly: "Please enter valid state name"},
+                        gymPhone: { phoneUS: "Please enter US phone number only"},
                         gymEmail: {
-                                required: "Please enter email ID",
                                 email: "Email ID not valid"
                         }
                 }

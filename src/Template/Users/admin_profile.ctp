@@ -8,10 +8,7 @@
                 <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="<?php echo BASE_URL; ?>administrator/user">Client</a> <span class="divider">/</span>
-            </li>
-            <li>
-                <a href="">Edit</a> <span class="divider"></span>
+                Admin Profile
             </li>
         </ul>
     </div>
@@ -21,11 +18,11 @@
     <div class="utopia-widget-title">
         <?php echo $this->Html->image('../backend/img/icons2/software24.png',array("class" => "utopia-widget-icon"));?>
         <!--<img class="utopia-widget-icon" src="../backend/img/icons2/software24.png">-->
-        <span>Client Details</span>
+        <span>Admin Details</span>
     </div>
 
-    <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
-    <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
+    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
+    <span class="msg_class"><?= $this->Flash->render('negative') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
@@ -34,7 +31,7 @@
                     <fieldset>
 
                         <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">User Pin Code<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Admin Pin Code<span style="color:#ff0000;">*</span></label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['userPin']; ?>" name="userPin" id="userPin" class="span10" id="input01">
@@ -66,7 +63,7 @@
                         </div>
 
                         <div class="control-group">
-                            <label for="input01" class="control-label">Email<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Email</label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['email']; ?>" name="email" id="email" class="span10" id="input01"> 
@@ -74,15 +71,23 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01"  class="control-label">Phone<span style="color:#ff0000;">*</span></label>
+                            <label for="input01"  class="control-label">Phone</label>
 
                             <div class="controls">
-                                <input type="text" onkeypress="return isNumber(event)" value="<?php echo $users['phone']; ?>" name="phone" id="phone" class="span10" id="input01"> 
+                                <input type="text"  value="<?php echo $users['phone']; ?>" name="phone" id="phone" class="span10" id="input01"> 
                             </div>
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">City<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Address</label>
+
+                            <div class="controls">
+                                <textarea name="address" id="address"><?php echo $users['address']; ?></textarea> 
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="input01" class="control-label">City</label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['city']; ?>" name="city" id="city" class="span10" id="input01"> 
@@ -90,7 +95,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">State<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">State</label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['state']; ?>" name="state" id="state" class="span10" id="input01"> 
@@ -98,29 +103,12 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Country<span style="color:#ff0000;">*</span></label>
-                            
-                            <div class="controls">
-                                <input type="text" value="<?php echo $users['country']; ?>" name="country" id="country" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Zip<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Zip</label>
                             
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['zip']; ?>" name="zip" id="zip" class="span10" id="input01">
                             </div>
                         </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Address<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <textarea name="address" id="address"><?php echo $users['address']; ?></textarea> 
-                            </div>
-                        </div>
-                        
                         
                         <div class="control-group">
                             <label for="input01" class="control-label">&nbsp;</label>
@@ -131,7 +119,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Image<span style="color:#ff0000;"></span></label>
+                            <label for="input01" class="control-label">Image</label>
 
                             <div class="controls">
                                 <input type="file" name="usersImage" id="usersImage">
@@ -142,7 +130,8 @@
                             <label for="input01" class="control-label"></label>
 
                             <div class="controls">
-                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" class="span10" id="input01">
+                                <input type="submit" value="Submit" name="submitBtn" id="submitBtn" id="input01">
+                                    <input type="button" value="Cancel" onclick="javascript:history.go(-1);" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>
                        
@@ -174,7 +163,7 @@ $().ready(function() {
         // validate signup form on keyup and submit
         $("#addFrm").validate({
                 rules: {
-                        userPin: "required",
+                        userPin: {required: true, minimum: 4, maximum: 6, number: true},
                         firstName: "required",
                         lastName: "required",
                         username: {
@@ -194,8 +183,7 @@ $().ready(function() {
                         address: "required"
                 },
                 messages: {
-                        role: "Please select user role",
-                        userPin: "please enter user PIN",
+                         userPin: {required: "Please enter user PIN", minlength: "Please enter PIN with in 4-6 digits", maxlength: "Please enter PIN with in 4-6 digits", number: "Please enter valid PIN"},
                         firstName: "Please enter user's firstname",
                         lastName: "Please enter user's lastname",
                         username: {
@@ -204,15 +192,8 @@ $().ready(function() {
                                 maxlength: "Your username must consist less or equal 14 characters"
                         },
                         email: {
-                                required: "Please enter email ID",
                                 email: "Email ID not valid"
-                        },
-                        phone: "Please enter phone number",
-                        city: "Please enter city",
-                        state: "Please enter state",
-                        country: "Please enter country",
-                        zip: "Please enter zip",
-                        address: "Please enter address"
+                        }
                 }
         });
 

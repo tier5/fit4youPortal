@@ -7,7 +7,7 @@
                             <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
-                            <a href="">Schedules</a> <span class="divider">/</span>
+                            Schedules
                         </li>
                     </ul>
                 </div>
@@ -27,7 +27,7 @@
                         });
                         });
 </script>
-
+	    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
             <div class="row-fluid">
 
                 <div class="span12">
@@ -35,8 +35,8 @@
                         <div class="utopia-widget-title" id="pageLabelDiv">
                             <img class="utopia-widget-icon" src="<?php echo BASE_URL; ?>backend/img/icons/paragraph_justify.png">
                             <span>Schedule List</span>
+			    <span class="new_span_class"><a href="<?php echo BASE_URL; ?>administrator/schedule/add"><i class="fa fa-pencil"></i> Add Session</a></span>
                         </div>
-
                         <div class="utopia-widget-content">
                         
                         <script type="text/javascript">
@@ -56,10 +56,13 @@
                                 url += '&searchKey='+searchByKeyword;
                                 window.location.href = url;
                             }
-                        </script>
-                                    
-                            <span style="color:green;"><?= $this->Flash->render('positive') ?></span>        
-                            <table class="table table-bordered">
+                        </script>      
+                            <span id="schedule_list" style="display: none;">
+                              <div class="myAnchorSpanArea">
+                                   <span  class="active"><a href="javascript:void(0);" id="list2"><i class="fa fa-list-ul"></i>List View</a></span>
+                                   <span ><a href="javascript:void(0);" id="chart2"><i class="fa fa-line-chart"></i>Calendar View</a></span>
+                              </div>
+                              <table class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <!--<th><input type="checkbox" class="utopia-check-all"></th>-->
@@ -74,28 +77,34 @@
 
                                 <tbody>  
                                     
-                                <?php if($allRecordCount > 0){ $i = 0;?>
-                                <?php foreach ($schedules as $schedule):?>
+                                <?php if($allRecordCount > 0){ $schedule = 0;?>
+                                <?php foreach ($schedules as $schedule): $data = $schedule->toArray();
+                                        $start_time = get_object_vars($data['start_time']);
+                                        $end_time = get_object_vars($data['end_time']);
+                              ?>
                                 <tr>
-                                    <td><?= h($schedule['client_fname']) ?>&nbsp;<?= h($schedule['client_lname']) ?></td>
-                                    <td><?= h($schedule['trainer_fname']) ?>&nbsp;<?= h($schedule['trainer_lname']) ?></td>
-                                    <td><?= h($schedule[$i]['start_time']) ?></td>
-                                    <td><?= h($schedule[$i]['end_time']) ?></td>
+                                    <td><?= h($data['client']['firstName']) ?>&nbsp;<?= h($data['client']['lastName']) ?></td>
+                                    <td><?= h($data['trainer']['firstName']) ?>&nbsp;<?= h($data['trainer']['lastName']) ?></td>
+                                    <td><?= h($start_time['date']) ?></td>
+                                    <td><?= h($end_time['date']) ?></td>
                                     <td>
-                                        <a href="<?php echo BASE_URL; ?>administrator/gyms/edit/<?php echo  $schedule['id']; ?>">Edit</a>
+                                        <a href="<?php echo BASE_URL; ?>administrator/schedule/edit/<?php echo  $data['id']; ?>">Edit</a>
                                         &nbsp;|&nbsp;
-                                        <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/gyms/delete/<?php echo  $schedule['id']; ?>">Delete</a>
+                                        <a onclick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/schedule/delete/<?php echo  $data['id']; ?>">Delete</a>
                                 </tr>                                
-                                <?php $i++;endforeach; ?>
+                                <?php endforeach; ?>
                                 <?php }else{ ?>
                                 <tr><td colspan="5">No Records.</td></tr>
                                 <?php } ?>
                                 </tbody>
 
                                 
-                            </table>
+                              </table>
+                            
+                            
 
-                            <div class="row-fluid">
+                              <div class="row-fluid">
+                            
                                 <div class="span6"> </div>
 
                                 <div class="span6">
@@ -109,7 +118,14 @@
                                     </div>
                                 </div>
                             </div>
-
+                         </span>
+                         <span id="schedule_calendar" style="display:block;">
+                              <div class="myAnchorSpanArea">
+                                   <span><a href="javascript:void(0);" id="list2"><i class="fa fa-list-ul"></i>List View</a></span>
+                                   <span class="active"><a href="javascript:void(0);" id="chart2"><i class="fa fa-line-chart"></i>Calendar View</a></span>
+                              </div>
+                              <div id='calendar'></div>
+                         </span>
                         </div>
                     </section>
                 </div>
@@ -129,6 +145,66 @@
                 return false;
             }
     }
+</script>
+<script>
+
+	$(document).ready(function() {
+		
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultDate: new Date(),
+			editable: true,
+			eventLimit: true, // allow "more" link when too many events
+			events: [
+                              <?php if($allRecordCount > 0){ $schedule = 0;?>
+                              <?php foreach ($schedules as $schedule): $data = $schedule->toArray();
+                                      $start_time = get_object_vars($data['start_time']);
+                                      $start_datetime = explode(' ',$start_time['date']);
+                                      $end_time = get_object_vars($data['end_time']);
+                                      $end_datetime = explode(' ',$end_time['date']);
+                              ?>
+                                     {
+                                             title: '<?= $data['client']['firstName'].' '.$data['client']['lastName'];?>',
+                                             start: '<?=$start_time['date'];?>',
+                                             end: '<?=$end_time['date'];?>',
+					     url: '<?=BASE_URL.'administrator/schedule/edit/'.$data['id'] ;?>'
+                                     },
+                              <?php endforeach; ?>
+                              <?php } ?>
+				
+                              ]     
+		});
+		
+	});
+
+</script>
+<style>
+
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+	#schedule_calendar button{ width:auto;}
+</style>
+
+<script type="text/javascript">
+$(function(){
+	$('#chart1,#chart2').on('click',function(){
+		$('#schedule_list').css('display','none');
+		$('#schedule_calendar').css('display','block');
+	});
+	
+	$('#list1,#list2').on('click',function(){
+		$('#schedule_list').css('display','block');
+		$('#schedule_calendar').css('display','none');
+	});
+	
+
+});
 </script>
 
 

@@ -8,24 +8,18 @@
                 <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="<?php echo BASE_URL; ?>administrator/user">Client</a> <span class="divider">/</span>
-            </li>
-            <li>
-                <a href="">Edit</a> <span class="divider"></span>
+                Edit User
             </li>
         </ul>
     </div>
 </div>
-
+  <span class="msg_class"><?= $this->Flash->render('negative') ?></span>
 <section class="utopia-widget utopia-form-box section" id="formElement">
     <div class="utopia-widget-title">
         <?php echo $this->Html->image('../backend/img/icons2/software24.png',array("class" => "utopia-widget-icon"));?>
         <!--<img class="utopia-widget-icon" src="../backend/img/icons2/software24.png">-->
         <span>Client Details</span>
     </div>
-
-    <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
-    <span style="color:red;"><?= $this->Flash->render('negative') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
@@ -54,30 +48,6 @@
                             </div>
                         </div>
                         
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Username<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <input type="text" value="<?php echo $users['username']; ?>" name="username" id="username" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Password</label>
-
-                            <div class="controls">
-                                <input type="password" name="password" id="password" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group" style="display: block;">
-                            <label for="input01" class="control-label">Confirm Password</label>
-
-                            <div class="controls">
-                                <input value="" type="password" value="" name="confirm_password" id="confirm_password" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
                         <div class="control-group">
                             <label for="input01" class="control-label">First Name<span style="color:#ff0000;">*</span></label>
 
@@ -95,7 +65,7 @@
                         </div>
 
                         <div class="control-group">
-                            <label for="input01" class="control-label">Email<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Email</label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['email']; ?>" name="email" id="email" class="span10" id="input01"> 
@@ -103,15 +73,23 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01"  class="control-label">Phone<span style="color:#ff0000;">*</span></label>
+                            <label for="input01"  class="control-label">Phone</label>
 
                             <div class="controls">
-                                <input type="text" onkeypress="return isNumber(event)" value="<?php echo $users['phone']; ?>" name="phone" id="phone" class="span10" id="input01"> 
+                                <input type="text" value="<?php echo $users['phone']; ?>" name="phone" id="phone" class="span10" id="input01"> 
                             </div>
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">City<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Address</label>
+
+                            <div class="controls">
+                                <textarea name="address" id="address"><?php echo $users['address']; ?></textarea> 
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="input01" class="control-label">City</label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['city']; ?>" name="city" id="city" class="span10" id="input01"> 
@@ -119,7 +97,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">State<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">State</label>
 
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['state']; ?>" name="state" id="state" class="span10" id="input01"> 
@@ -127,29 +105,12 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Country<span style="color:#ff0000;">*</span></label>
-                            
-                            <div class="controls">
-                                <input type="text" value="<?php echo $users['country']; ?>" name="country" id="country" class="span10" id="input01">
-                            </div>
-                        </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Zip<span style="color:#ff0000;">*</span></label>
+                            <label for="input01" class="control-label">Zip</label>
                             
                             <div class="controls">
                                 <input type="text" value="<?php echo $users['zip']; ?>" name="zip" id="zip" class="span10" id="input01">
                             </div>
                         </div>
-                        
-                        <div class="control-group">
-                            <label for="input01" class="control-label">Address<span style="color:#ff0000;">*</span></label>
-
-                            <div class="controls">
-                                <textarea name="address" id="address"><?php echo $users['address']; ?></textarea> 
-                            </div>
-                        </div>
-                        
                         
                         <div class="control-group">
                             <label for="input01" class="control-label">&nbsp;</label>
@@ -177,7 +138,7 @@
                         </div>
                         
                         <div class="control-group">
-                            <label for="input01" class="control-label">Loged in<span style="color:#ff0000;"></span></label>
+                            <label for="input01" class="control-label">Logged in<span style="color:#ff0000;"></span></label>
 
                             <div class="controls">
                                 <input type="radio" name="is_login" value="1" <?php if($users['is_login'] == '1'){?> checked <?php }?> id="is_active">&nbsp;Yes&nbsp;&nbsp;
@@ -190,6 +151,7 @@
 
                             <div class="controls">
                                 <input type="submit" value="Submit" name="submitBtn" id="submitBtn" id="input01">
+                                <input type="button" value="Cancel" onclick="javascript:history.go(-1);" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>
                        
@@ -222,48 +184,28 @@ $().ready(function() {
         $("#addFrm").validate({
                 rules: {
                         role: "required",
-                        userPin: "required",
+                        userPin: {required: true, minlength: 4, maxlength: 6, number: true},
                         firstName: "required",
                         lastName: "required",
-                        username: {
-                                required: true,
-                                minlength: 4,
-                                maxlength: 14
-                        },
-                        confirm_password: {
-                            equalTo: "#password"
-                        },
                         email: {
-                                required: true,
                                 email: true
                         },
-                        phone: "required",
-                        city: "required",
-                        state: "required",
-                        country: "required",
-                        zip: "required",
-                        address: "required"
+                        phone: { phoneUS: true},
+                        city: {lettersonly: true},
+                        state: {lettersonly: true}
                 },
                 messages: {
                         role: "Please select user role",
-                        userPin: "please enter user PIN",
+                         userPin: {required: "Please enter user PIN", minlength: "Please enter PIN with in 4-6 digits", maxlength: "Please enter PIN with in 4-6 digits", number: "Please enter valid PIN"},
                         firstName: "Please enter user's firstname",
                         lastName: "Please enter user's lastname",
-                        username: {
-                                required: "Please enter a username",
-                                minlength: "Your username must consist of at least 4 characters",
-                                maxlength: "Your username must consist less or equal 14 characters"
-                        },
+                        
                         email: {
-                                required: "Please enter email ID",
                                 email: "Email ID not valid"
                         },
-                        phone: "Please enter phone number",
-                        city: "Please enter city",
-                        state: "Please enter state",
-                        country: "Please enter country",
-                        zip: "Please enter zip",
-                        address: "Please enter address"
+                        phone: { phoneUS: "Please enter US phone number only"},
+                        city: {lettersonly: "Please enter correct city name"},
+                        state: {lettersonly: "Please enter correct state name"}
                 }
         });
 

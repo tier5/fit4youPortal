@@ -7,13 +7,13 @@
                             <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
-                            <a href="">User Stats</a> <span class="divider">/</span>
+                            User Stats
                         </li>
                     </ul>
                 </div>
             </div>
     
-            <span style="color:green;" id="msg"><?php echo $this->Flash->render('positive') ?></span>
+            <span class="msg_class" id="msg"><?php echo $this->Flash->render('positive') ?></span>
 
             <div class="row-fluid">
 
@@ -39,7 +39,7 @@
 					    <td><input type="text" value="" name="triceps" placeholder="triceps" id="triceps" class="span10"></td>
 					    <td><input type="hidden" value="<?php echo $user_id;?>" name="user_id" id="user_id" class="span10" >
 					    <input type="hidden" value="" name="id" id="id" class="span10" >
-    <input type="button" value="Submit" name="submit" id="submit"></td>
+    <input type="button" value="Submit" name="submit" id="submitBtn"></td>
 				    </tr>                                
                                 </tbody>
                                 
@@ -122,7 +122,7 @@
 						</select>
 				    </div>
 				    <div style="clear:both;"></div>
-				    <div id="curve_chart" style=""></div>
+				    <div id="curve_chart" style="height: auto !important;"></div>
 					    
 				    			
 				    
@@ -311,6 +311,6 @@ $(function(){
 		    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
     
 		    chart.draw(data, options);
-                    $('#curve_chart').css('height','200');
+                    
   }
 </script>

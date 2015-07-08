@@ -16,6 +16,9 @@ class Gyms extends Entity
      */
     protected $_accessible = [
         'gymName' => true,
+        'gymCity' => true,
+        'gymState' => true,
+        'gymZip' => true,
         'gymAddress' => true,
         'gymPhone' => true,
         'gymEmail' => true,

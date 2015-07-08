@@ -6,6 +6,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Utility\Security;
+use Cake\I18n\Time;
 
 
 class AdminschedulesController extends AppController{
@@ -55,7 +56,6 @@ class AdminschedulesController extends AppController{
         
         $this->loadModel('UserRelations');
         $this->loadModel('Users');
-        //$this->loadModel('ModulePermissions');
 
         $validationErrMsg = array();
         $fieldsValue = array();
@@ -66,8 +66,6 @@ class AdminschedulesController extends AppController{
         $this->set('description',"Admin|Add Schedule");
         $this->set('userRole',$adminDetls->role);
         
-        //$allModules = $this->Modules->find('all');  
-        //$allModulesCount = $allModules->count();
         $clients = $this->Users->find('all')->where(['role' => 'CLIENT']);
         $totClients = $clients->count();
         $trainers = $this->Users->find('all')->where(['role' => 'TRAINER']);
@@ -76,15 +74,16 @@ class AdminschedulesController extends AppController{
         if($this->request->is('post'))
         {
            $postData = $this->request->data;
-
+            echo $postData['date'].$postData['start_time'];
 
             $schedules = $this->UserRelations->newEntity();                       
             $databaseArr = array(
                 'client_id'     =>      $postData['client_id'],
                 'trainer_id'    =>      $postData['trainer_id'],
-                'start_time'    =>      $postData['start_time'],
-                'end_time'      =>      $postData['end_time'],
-                'status'        =>      $postData['status']
+                'start_time'    =>      Time::createFromTimestamp(strtotime($postData['date'].' '.$postData['start_time'].':00')),
+                'end_time'      =>      Time::createFromTimestamp(strtotime($postData['date'].' '.$postData['end_time'].':00')),
+                'date'          =>      Time::now(),
+                'status'        =>      '0'
             );  
 
             $schedules = $this->UserRelations->patchEntity($schedules, $databaseArr);
@@ -95,7 +94,7 @@ class AdminschedulesController extends AppController{
             $this->Flash->success('Schedules has been added successfully.', [
                'key' => 'positive'
             ]);
-            $this->redirect(BASE_URL.'administrator/schedules/add');
+            $this->redirect(BASE_URL.'administrator/schedule');
             
         }
         
@@ -144,19 +143,22 @@ class AdminschedulesController extends AppController{
             $databaseArr = array(
                 'client_id'     =>      $postData['client_id'],
                 'trainer_id'    =>      $postData['trainer_id'],
-                'start_time'    =>      $postData['start_time'],
-                'end_time'      =>      $postData['end_time'],
-                'status'        =>      $postData['status']
+                'start_time'    =>      Time::createFromTimestamp(strtotime($postData['date'].' '.$postData['start_time'].':00')),
+                'end_time'      =>      Time::createFromTimestamp(strtotime($postData['date'].' '.$postData['end_time'].':00')),
+                'date'          =>      Time::now(),
+                'status'        =>      '0'
             ); 
-
-            $this->UserRelations->update($databaseArr,['id' => $postData['id']]);
-	    $user_id = $postData['user_id'];        
+            $query = $this->UserRelations->query();
+            $flag = $query->update()
+                    ->set($databaseArr)
+                    ->where(['id' => $postData['id']])
+                    ->execute();       
 
           
             $this->Flash->success('Schedule has been updated successfully.', [
                 'key' => 'positive'
             ]);
-            $this->redirect(BASE_URL.'administrator/schedules/edit/'.$id);
+            $this->redirect(BASE_URL.'administrator/schedule');
         }
         
         $this->set('clients',$clients);

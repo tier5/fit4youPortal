@@ -5,23 +5,22 @@
     <div class="span12">
         <ul class="breadcrumb">
             <li>
-                <a href="<?php echo BASE_URL; ?>admin/dashboard">Admin</a> <span class="divider">/</span>
+                <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="<?php echo BASE_URL; ?>admin/changepass?admin=1">Change Password</a> <span class="divider"></span>
+                Change Password
             </li>
         </ul>
     </div>
 </div>
-
+    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
+    <span class="msg_class"><?= $this->Flash->render('negetive') ?></span>
 <section class="utopia-widget utopia-form-box section" id="formElement">
     <div class="utopia-widget-title">
         <?php echo $this->Html->image('../backend/img/icons2/software24.png',array("class" => "utopia-widget-icon"));?>
         <!--<img class="utopia-widget-icon" src="../backend/img/icons2/software24.png">-->
         <span>Change Password</span>
     </div>
-    <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
-    <span style="color:green;"><?= $this->Flash->render('negetive') ?></span>
     <div class="row-fluid">
         <div class="utopia-widget-content">
             <div class="span6 utopia-form-freeSpace">
@@ -55,7 +54,8 @@
                             <label for="input01" class="control-label"></label>
 
                             <div class="controls">
-                                <input type="submit" value="Submit" name="Submit" id="Submit" id="input01">
+                                <input type="submit" value="Submit" name="Submit" id="submitBtn">
+                                        <input type="button" value="Cancel" onclick="javascript:history.go(-1);" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>
                         

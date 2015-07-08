@@ -7,10 +7,7 @@
                 <a href="<?php echo BASE_URL; ?>admin/dashboard">Admin</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="<?php echo BASE_URL; ?>admin/organisation/">Gym</a> <span class="divider">/</span>
-            </li>
-            <li>
-                <a href="">Edit</a> <span class="divider"></span>
+                Edit Gym
             </li>
         </ul>
     </div>
@@ -20,19 +17,18 @@
     <div class="utopia-widget-title">
         <?php echo $this->Html->image('../backend/img/icons2/software24.png',array("class" => "utopia-widget-icon"));?>
         <!--<img class="utopia-widget-icon" src="../backend/img/icons2/software24.png">-->
-        <span>Gym Details</span>
+        <span>Edit Gym</span>
     </div>
 
-    <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
             <div class="span6 utopia-form-freeSpace">
-                <form class="form-horizontal" name="changePassForm" id="changePassForm" action="" method="post">
+                <form class="form-horizontal" name="addFrm" id="addFrm" action="" method="post">
                     <fieldset>
-                        
                         <div class="control-group">
-                            <label for="input01" class="control-label">Gym Name</label>
+                            <label for="input01" class="control-label">Gym Name<span style="color:#ff0000;">*</span></label>
 
                             <div class="controls">
                                 <input type="text" name="gymName" id="gymName" value="<?php echo $gyms['gymName']; ?>" class="span10" id="input01">
@@ -44,6 +40,30 @@
 
                             <div class="controls">
                                 <textarea name="gymAddress" id="gymAddress" class="span10" id="input01"><?php echo $gyms['gymAddress']; ?></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="input01" class="control-label">City</label>
+
+                            <div class="controls">
+                                <input type="text" name="gymCity" id="gymCity" value="<?php echo $gyms['gymCity']; ?>" class="span10" id="input01">
+                            </div>
+                        </div>
+			
+			<div class="control-group">
+                            <label for="input01" class="control-label">State</label>
+
+                            <div class="controls">
+                                <input type="text" name="gymState" id="gymState" value="<?php echo $gyms['gymState']; ?>" class="span10" id="input01">
+                            </div>
+                        </div>
+			
+			<div class="control-group">
+                            <label for="input01" class="control-label">Zip</label>
+
+                            <div class="controls">
+                                <input type="text" name="gymZip" id="gymZip" value="<?php echo $gyms['gymZip']; ?>" class="span10" id="input01">
                             </div>
                         </div>
                         
@@ -67,7 +87,8 @@
                             <label for="input01" class="control-label"></label>
 
                             <div class="controls">
-                                <input type="submit" value="Submit" name="subBtn" id="subBtn" class="span10" id="input01">
+                                <input type="submit" value="Submit" name="subBtn" id="submitBtn" id="input01">
+                            <input type="button" value="Cancel" onclick="javascript:history.go(-1);" name="submitBtn" id="submitBtn" id="input01">
                             </div>
                         </div>                        
                     </fieldset>
@@ -85,22 +106,20 @@
 $().ready(function() {
 
         // validate signup form on keyup and submit
-        $("#changePassForm").validate({
+        $("#addFrm").validate({
                 rules: {
                         gymName: "required",
-                        gymAddress: "required",
-                        gymPhone: "required",
-                        gymEmail: {
-                                required: true,
-                                email: true
-                        }
+                        gymCity: {lettersonly: true},
+                        gymState: {lettersonly: true},
+                        gymPhone: { phoneUS: true},
+                        gymEmail: { email: true}
                 },
                 messages: {
                         gymName: "Please enter gym name",
-                        gymAddress: "please enter gym address",
-                        gymPhone: "Please enter gym phone number",
+                        gymCity: {number: "Please enter valid city name"},
+                        gymState: {number: "Please enter valid state name"},
+                        gymPhone: { phoneUS: "Please enter US phone number only"},
                         gymEmail: {
-                                required: "Please enter email ID",
                                 email: "Email ID not valid"
                         }
                 }

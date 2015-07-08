@@ -56,7 +56,7 @@ class UsersController extends AppController
 
 	public function index()
 	{
-		$this->set('title',SITE_NAME." Admin Dashboard");
+		$this->set('title',SITE_NAME." Admin Login Page");
 		$this->set('description','Admin login panel '.SITE_NAME.' admin panel');
 		$this->set('authors',['Gym','Fitness','Gym App']);
 		
@@ -142,12 +142,20 @@ public function dashboard()
 	$this->set('title',SITE_NAME." Admin Dashboard");
 	$this->set('description','Admin login panel '.SITE_NAME.' admin panel');
 	$this->set('authors',['Gym','Fitness','Gym App']);
-   $session = $this->request->session();
-   $adminDetls = $session->read('admin.details');
-   $this->set('title',SITE_NAME." Admin Dashboard");
-   $this->set('description','Dashboard of '.SITE_NAME.' admin panel');
-   $this->set('userRole',$adminDetls->role);
-   $this->set('active_class','dashboard');
+	$session = $this->request->session();
+	$adminDetls = $session->read('admin.details');
+	$this->set('title',SITE_NAME." Admin Dashboard");
+	$this->set('description','Dashboard of '.SITE_NAME.' admin panel');
+	$this->set('userRole',$adminDetls->role);
+	$this->set('active_class','dashboard');
+	$this->loadModel('Users');
+	$this->loadModel('Gyms');
+	$totClient = $this->Users->find('all')->where(['role' => 'CLIENT'])->count();
+	$this->set('totClient',$totClient);
+	$totTrainer = $this->Users->find('all')->where(['role' => 'TRAINER'])->count();
+	$this->set('totTrainer',$totTrainer);
+	$totGyms = $this->Gyms->find('all')->count();
+	$this->set('totGyms',$totGyms);
 }
 
 public function edit($id=null)
@@ -156,13 +164,7 @@ public function edit($id=null)
    $this->set('active_class','user');
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
-    /*$hasAccess = $this->hasAccess($adminDetls->id,'8','moduleEdit');
-    if($hasAccess=='0' && $adminDetls->id!='1'){
-        $this->Flash->success("You don't have access to this page.", [
-           'key' => 'positive'
-        ]);
-        $this->redirect(BASE_URL.'admin/dashboard');        
-    }*/
+
     
     $this->loadComponent('ImageTransform');
     $this->loadModel('Users');
@@ -185,7 +187,21 @@ public function edit($id=null)
     ]);
    
     if ($this->request->is('post')){      
-        $postData = $this->request->data; 
+        $postData = $this->request->data;
+	
+	$pin=$this->Users->find('all',
+            array('conditions' => array(
+                'userPin' => $postData['userPin'],
+                'is_deleted'  => '0'
+            )))->count();
+	
+	if($pin>1)
+	{
+		$this->Flash->success('Pin already exist', [
+                'key' => 'negative'
+		]);
+		$this->redirect(BASE_URL.'administrator/user/edit/'.$id);
+	}
         
         if($_FILES['usersImage']['name']!=''){
             $fileName = $_FILES['usersImage']['name'];
@@ -213,8 +229,6 @@ public function edit($id=null)
 	    
                 $databaseArr = array(
 			'role'              =>      $postData['role'],
-			'username'          =>      $postData['username'],
-			'password'          =>      $postData['password'],
 			'firstName'         =>      $postData['firstName'],
 			'lastName'          =>      $postData['lastName'],
 			'userPin'           =>      $postData['userPin'],
@@ -222,7 +236,6 @@ public function edit($id=null)
 			'phone'             =>      $postData['phone'],
 			'city'              =>      $postData['city'],
 			'state'             =>      $postData['state'],
-			'country'           =>      $postData['country'],
 			'zip'               =>      $postData['zip'],
 			'address'           =>      $postData['address'],
 			'photo'             =>      $imageName.'.'.$extn,
@@ -238,8 +251,6 @@ public function edit($id=null)
 		{
 			$databaseArr = array(
 				'role'              =>      $postData['role'],
-				'username'          =>      $postData['username'],
-				'password'          =>      $postData['password'],
 				'firstName'         =>      $postData['firstName'],
 				'lastName'          =>      $postData['lastName'],
 				'userPin'           =>      $postData['userPin'],
@@ -247,7 +258,6 @@ public function edit($id=null)
 				'phone'             =>      $postData['phone'],
 				'city'              =>      $postData['city'],
 				'state'             =>      $postData['state'],
-				'country'           =>      $postData['country'],
 				'zip'               =>      $postData['zip'],
 				'address'           =>      $postData['address'],
 				'update_date'	    =>      Time::now(),
@@ -261,7 +271,6 @@ public function edit($id=null)
 			
 			$databaseArr = array(
 				'role'              =>      $postData['role'],
-				'username'          =>      $postData['username'],
 				'firstName'         =>      $postData['firstName'],
 				'lastName'          =>      $postData['lastName'],
 				'userPin'           =>      $postData['userPin'],
@@ -269,7 +278,6 @@ public function edit($id=null)
 				'phone'             =>      $postData['phone'],
 				'city'              =>      $postData['city'],
 				'state'             =>      $postData['state'],
-				'country'           =>      $postData['country'],
 				'zip'               =>      $postData['zip'],
 				'address'           =>      $postData['address'],
 				'update_date'	    =>      Time::now(),
@@ -286,7 +294,14 @@ public function edit($id=null)
             $this->Flash->success('The user has been saved', [
                 'key' => 'positive'
             ]);
-            return $this->redirect(BASE_URL.'administrator/user/edit/'.$id);
+	    if($postData['role'] == 'CLIENT')
+	    {
+		$this->redirect(BASE_URL.'administrator/client');
+	    }
+	    else
+	    {
+		$this->redirect(BASE_URL.'administrator/trainer');
+	    }
 
 
     }    
@@ -304,22 +319,11 @@ public function add()
    
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
-    /*$hasAccess = $this->hasAccess($adminDetls->id,'8','moduleAdd');
-    if($hasAccess=='0' && $adminDetls->id!='1'){
-        $this->Flash->success("You don't have access to this page.", [
-           'key' => 'positive'
-        ]);
-        $this->redirect(BASE_URL.'admin/dashboard');        
-    }*/
-    
+
     $this->loadComponent('ImageTransform');
     $this->set('title','Admin|Add Users');
     $this->set('description','Admin|Add Users');
     $this->set('userRole',$adminDetls->role);
-    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
-    $validationErrMsg = array();
-    $fieldsValue = array();
-    $hasError = 0;
    
     $this->loadModel('Users');
     $this->loadModel('Roles');
@@ -328,8 +332,22 @@ public function add()
    
     if($this->request->is('post'))
     {
-      //$this->request->data['password']=$password='123456';
-        $postData = $this->request->data;   
+
+        $postData = $this->request->data;
+	
+	$pin=$this->Users->find('all',
+            array('conditions' => array(
+                'userPin' => $postData['userPin'],
+                'is_deleted'  => '0'
+            )))->count();
+	
+	if($pin>0)
+	{
+		$this->Flash->success('Pin already exist', [
+                'key' => 'negative'
+		]);
+		$this->redirect(BASE_URL.'administrator/user/add');
+	}
         
         if($_FILES['usersImage']['name']!=''){
             $fileName = $_FILES['usersImage']['name'];
@@ -338,112 +356,102 @@ public function add()
             $extn = $fileNameArr[$fileNameArrCnt-1];
             $extn = strtolower($extn);
         }
-        
-        //echo count($postData['role']);
-        //pr($postData['role']);exit;
-        
+            
+            
+	if($_FILES['usersImage']['name']!='')
+	{
+	    $targetPath = './uploads/images/users_profile/';
+	    $imageName = time().rand(0,100);
+	    $up=$this->ImageTransform->upload("usersImage",$targetPath,$imageName);
+	    if($up)
+	    {
+		chmod($targetPath.$imageName.'.'.$extn,0777);                    
+		$this->ImageTransform->setQuality(100);
+		$this->ImageTransform->resize($this->ImageTransform->main_src,100,100, './uploads/images/users_profile/thumb/'.$this->ImageTransform->main_img);
+	    }
+	    
+	    $postData['photo'] = $imageName.'.'.$extn;
+	}
+	else
+	{
+	    $postData['photo'] = '';
+	}
+	
+	//$password = $this->generatePassword();
+	$activationKey = $this->randomPrefix(16);
+	$user = $this->Users->newEntity();
+       
+	$databaseArr = array(
+		    'role'              =>      $postData['role'],
+		    'firstName'         =>      $postData['firstName'],
+		    'lastName'          =>      $postData['lastName'],
+		    'userPin'           =>      $postData['userPin'],
+		    'email'             =>      $postData['email'],
+		    'phone'             =>      $postData['phone'],
+		    'city'              =>      $postData['city'],
+		    'state'             =>      $postData['state'],
+		    'zip'               =>      $postData['zip'],
+		    'address'           =>      $postData['address'],
+		    'photo'             =>      $postData['photo'],
+		    'join_date'	    =>      Time::now(),
+		    'update_date'	    =>      Time::now(),
+		    'is_login'          =>      '0',
+		    'is_active'         =>      '1',
+		    'is_deleted'        =>      '0'
+	    );         
+	    
 
-        $allUsernames=$this->Users->find('all',
-            array('conditions' => array(
-                'username' => $postData['username'],
-                'is_deleted'  => '0'
-            )));
-        
-        $allEmails=$this->Users->find('all',
-            array('conditions' => array(
-                'email' => $postData['email'],
-                'is_deleted'  => '0'
-            )));
-            
+	$user = $this->Users->patchEntity($user, $databaseArr);
+	$this->Users->save($user);
+	
+	/*$mailBody = '
+	<div style="width:700px; border:1px solid black;">
+	<div><h2>Team Trial</h2></div>
+	<div>
+	Hello '.$postData['firstName'].' '.$postData['lastName'].',
+	<br /><br />
+	You have been registered successfully by admin.
+	<br />
+	Please see below your login credentials :
+	<br />
+	<a href="'.BASE_URL.'user-activation/'.$activationKey.'">Click Here </a>to activate your account.
+	<br />
+	<a href="'.BASE_URL.'user-login">Click Here </a>to login.<br />
+	<b>Pin Code :</b> '.$postData['userPin'].'<br />
+	<br /><br />
+	Regards,<br />
+	Team Trial.
+	</div>
+	</div>
+	';
+	$to = $postData['email'];
+	$subject = $postData['role']." Registration";
+	$email = new Email('default');
+		    $email->from(['santu@unifiedinfotech.net' => 'Fit4You.com'])
+		    ->to($to)
+		    ->subject($subject)
+		    ->send($mailBody);*/
 
-            $userRegisNo = $this->randomPrefix(10);
-            
-            if($_FILES['usersImage']['name']!='')
-            {
-                $targetPath = './uploads/images/users_profile/';
-                $imageName = time().rand(0,100);
-                $up=$this->ImageTransform->upload("usersImage",$targetPath,$imageName);
-                if($up)
-                {
-                    chmod($targetPath.$imageName.'.'.$extn,0777);                    
-                    $this->ImageTransform->setQuality(100);
-                    $this->ImageTransform->resize($this->ImageTransform->main_src,100,100, './uploads/images/users_profile/thumb/'.$this->ImageTransform->main_img);
-                }
-            }
-            
-            //$password = $this->generatePassword();
-            $activationKey = $this->randomPrefix(16);
-            $user = $this->Users->newEntity();                       
-            $databaseArr = array(
-			'role'              =>      $postData['role'],
-			'username'          =>      $postData['username'],
-			'password'          =>      $postData['password'],
-			'firstName'         =>      $postData['firstName'],
-			'lastName'          =>      $postData['lastName'],
-			'userPin'           =>      $postData['userPin'],
-			'email'             =>      $postData['email'],
-			'phone'             =>      $postData['phone'],
-			'city'              =>      $postData['city'],
-			'state'             =>      $postData['state'],
-			'country'           =>      $postData['country'],
-			'zip'               =>      $postData['zip'],
-			'address'           =>      $postData['address'],
-			'photo'             =>      $imageName.'.'.$extn,
-			'join_date'	    =>      Time::now(),
-			'update_date'	    =>      Time::now(),
-			'is_login'          =>      '0',
-			'is_active'         =>      '1',
-			'is_deleted'        =>      '0'
-		);         
-		
+	
 
-            $user = $this->Users->patchEntity($user, $databaseArr);
-            $this->Users->save($user);
+	if($postData['role'] == 'CLIENT')
+	{
+		$this->Flash->success('The client profile has been saved', [
+			'key' => 'positive'
+		]);
+		$this->redirect(BASE_URL.'administrator/client');
+	}
+	else
+	{
+		$this->Flash->success('The trainer profile has been saved', [
+			'key' => 'positive'
+		]);
+		$this->redirect(BASE_URL.'administrator/trainer');
+	}
             
-            $mailBody = '
-            <div style="width:700px; border:1px solid black;">
-            <div><h2>Team Trial</h2></div>
-            <div>
-            Hello '.$postData['firstName'].' '.$postData['lastName'].',
-            <br /><br />
-            You have been registered successfully by admin.
-            <br />
-            Please see below your login credentials :
-            <br />
-            <a href="'.BASE_URL.'user-activation/'.$activationKey.'">Click Here </a>to activate your account.
-            <br />
-            <a href="'.BASE_URL.'user-login">Click Here </a>to login.<br />
-            <b>Email :</b> '.$postData['username'].'<br />
-	    <b>Email :</b> '.$postData['email'].'<br />
-            <b>Password :</b> '.$postData['password'].'
-            <br /><br />
-            Regards,<br />
-            Team Trial.
-            </div>
-            </div>
-            ';
-            //echo $mailBody;exit;
-            $to = $postData['email'];
-            $subject = $postData['role']." Registration";
-	    //echo mail($to,$subject,$mailBody);
-	    $email = new Email('default');
-			$email->from(['santu@unifiedinfotech.net' => 'Fit4You.com'])
-			->to($to)
-			->subject($subject)
-			->send($mailBody);
-
-            
-            
-            $this->Flash->success('The user has been saved', [
-                'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'administrator/user/add');
     }
    
-    $this->set(array(
-        'fieldsValue' => $fieldsValue,
-        'allRoles' =>  $allRoles
-    ));
+    $this->set(['allRoles' =>  $allRoles]);
 }
 
 public function userlist()
@@ -451,13 +459,6 @@ public function userlist()
    $this->set('active_class','user');
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
-    /*$hasAccess = $this->hasAccess($adminDetls->id,'8','moduleList');
-    if($hasAccess=='0' && $adminDetls->id!='1'){
-        $this->Flash->success("You don't have access to this page.", [
-           'key' => 'positive'
-        ]);
-        $this->redirect(BASE_URL.'admin/dashboard');        
-    }*/
 
     $this->loadModel('Users');
     $this->set('title',"Admin|Client List");
@@ -491,13 +492,6 @@ public function trainerlist()
     $this->set('active_class','user');
     $session = $this->request->session();
     $adminDetls = $session->read('admin.details');
-    /*$hasAccess = $this->hasAccess($adminDetls->id,'8','moduleList');
-    if($hasAccess=='0' && $adminDetls->id!='1'){
-        $this->Flash->success("You don't have access to this page.", [
-           'key' => 'positive'
-        ]);
-        $this->redirect(BASE_URL.'admin/dashboard');        
-    }*/
 
     $this->loadModel('Users');
     $this->set('title',"Admin|Users List");
@@ -839,7 +833,6 @@ public function adminProfile()
 			'phone'             =>      $postData['phone'],
 			'city'              =>      $postData['city'],
 			'state'             =>      $postData['state'],
-			'country'           =>      $postData['country'],
 			'zip'               =>      $postData['zip'],
 			'address'           =>      $postData['address'],
 			'photo'             =>      $imageName.'.'.$extn,
@@ -862,7 +855,6 @@ public function adminProfile()
 			'phone'             =>      $postData['phone'],
 			'city'              =>      $postData['city'],
 			'state'             =>      $postData['state'],
-			'country'           =>      $postData['country'],
 			'zip'               =>      $postData['zip'],
 			'address'           =>      $postData['address'],
 			'update_date'	    =>      Time::now(),

@@ -23,10 +23,9 @@
 
             <div class="header-top">
 
-                <div class="header-wrapper">
-
-                    <a href="#" class="utopia-logo">
-                         <?php echo $this->Html->image('../backend/img/fit-100x100.png');?>
+                <div class="header-wrapper logoArea">
+                    <a href="#" class="utopia-logo" style="width:50px;height:50px;">
+                         <?php echo $this->Html->image('../backend/img/fit-50x50.png');?>
                          
                     </a>
 

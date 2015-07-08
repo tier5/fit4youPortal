@@ -4,10 +4,10 @@
                 <div class="span12">
                     <ul class="breadcrumb">
                         <li>
-                            <a href="/admin/dashboard">Admin</a> <span class="divider">/</span>
+                            <a href="<?php echo BASE_URL; ?>administrator/dashboard">Admin</a> <span class="divider">/</span>
                         </li>
                         <li>
-                            <a href="">Roles</a> <span class="divider">/</span>
+                            <a href="<?php echo BASE_URL; ?>administrator/roles">Roles</a> <span class="divider">/</span>
                         </li>
                         <li>
                             <a href="">List</a> <span class="divider">/</span>
@@ -65,8 +65,7 @@
                                     <td><?php echo $val->roleName; ?></td>
                                     <td>
                                          <a href="<?php echo BASE_URL; ?>administrator/roles/edit/<?php echo  $val->id; ?>">Edit</a>
-                                        &nbsp;|&nbsp;
-                                        <a onclick="return delConfirm(<?php echo  $val->id; ?>);" href="javascript:void(0);">Delete</a>
+                                        
                                     </td>
                                 </tr>  
                                 <?php endforeach; ?>

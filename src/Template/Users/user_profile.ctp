@@ -10,7 +10,7 @@
                 <a href="<?php echo BASE_URL; ?>administrator/user">User</a> <span class="divider">/</span>
             </li>
             <li>
-                <a href="">Profile</a> <span class="divider"></span>
+                Profile
             </li>
         </ul>
     </div>

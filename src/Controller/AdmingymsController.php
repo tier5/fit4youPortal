@@ -76,10 +76,13 @@ class AdmingymsController extends AppController{
 
                        
 	    $gymsArr = array(
-	    		'gymName'      =>      $postData['gymName'],
-	    		'gymAddress'   =>      $postData['gymAddress'],
-	    		'gymPhone'     =>      $postData['gymPhone'],
-	    		'gymEmail'     =>      $postData['gymEmail']
+	    		'gymName'      	=>      $postData['gymName'],
+			'gymCity'   	=>      $postData['gymCity'],
+			'gymState'   	=>      $postData['gymState'],
+			'gymZip'   	=>      $postData['gymZip'],
+	    		'gymAddress'   	=>      $postData['gymAddress'],
+	    		'gymPhone'     	=>      $postData['gymPhone'],
+	    		'gymEmail'     	=>      $postData['gymEmail']
 		);         
 
              $gym = $this->Gyms->patchEntity($gyms, $gymsArr);
@@ -88,7 +91,7 @@ class AdmingymsController extends AppController{
              $this->Flash->success('Gym has been saved successfully.', [
                     'key' => 'positive'
                 ]);
-             $this->redirect(BASE_URL.'administrator/gyms/add');
+             $this->redirect(BASE_URL.'administrator/gyms');
             
         }
     }
@@ -101,21 +104,11 @@ class AdmingymsController extends AppController{
         
         $session = $this->request->session();
         $adminDetls = $session->read('admin.details');
-        /*$hasAccess = $this->hasAccess($adminDetls->id,'1','moduleEdit');
-        if($hasAccess=='0' && $adminDetls->id!='1'){
-            $this->Flash->success("You don't have access to this page.", [
-               'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'admin/dashboard');        
-        }*/
         
         $this->set('title',"Admin|Edit Gym");
         $this->set('description',"Admin|Edit Gym");
         $this->set('userRole',$adminDetls->role);
-        $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
-        $validationErrMsg = array();
-        $fieldsValue = array();
-        $hasError = 0;
+
         
         $gyms = $this->Gyms->get($id, [
             'contain' => []
@@ -126,10 +119,13 @@ class AdmingymsController extends AppController{
             $postData = $this->request->data;  
 
 	    $databaseArr = array(
-	    		'gymName'      =>      $postData['gymName'],
-	    		'gymAddress'   =>      $postData['gymAddress'],
-	    		'gymPhone'     =>      $postData['gymPhone'],
-	    		'gymEmail'     =>      $postData['gymEmail']
+	    		'gymName'      	=>      $postData['gymName'],
+			'gymCity'   	=>      $postData['gymCity'],
+			'gymState'   	=>      $postData['gymState'],
+			'gymZip'   	=>      $postData['gymZip'],
+	    		'gymAddress'   	=>      $postData['gymAddress'],
+	    		'gymPhone'     	=>      $postData['gymPhone'],
+	    		'gymEmail'     	=>      $postData['gymEmail']
 	    ); 
 
 	    $gym = $this->Gyms->patchEntity($gyms, $databaseArr);                                       
@@ -137,7 +133,7 @@ class AdmingymsController extends AppController{
 	    $this->Flash->success('Gym has been updated successfully.', [
 		'key' => 'positive'
 	    ]);
-	    return $this->redirect(BASE_URL.'administrator/gyms/edit/'.$id);          
+	    return $this->redirect(BASE_URL.'administrator/gyms');          
         }
         
         $this->set(compact('gyms'));
