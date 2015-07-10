@@ -26,25 +26,23 @@ class AdminschedulesController extends AppController{
         $totRecordPerPage = 10;        
         $this->paginate = [
             'limit'=>$totRecordPerPage,
+            'order' => [
+		    'UserRelations.id' => 'desc'
+	    ]
         ];        
+        $query=$this->UserRelations->find('all',array('conditions'=>['Client.is_active' => '1','Trainer.is_active' => '1'],'contain'=>['Client','Trainer']));
+        $allRecordCount = $query->count();
         
-        $this_roles = $this->paginate($this->UserRelations->find());
-        $allRecordCount = $this_roles->count();
         
-        $r=$this->UserRelations->find('all',array('conditions'=>['Client.is_active' => '1','Trainer.is_active' => '1'],'contain'=>['Client','Trainer']));
-        
-        $arr = $r->toArray();
+        //$arr = $query->toArray();
 
         $this->set(array(
             'allRecordCount'   =>  $allRecordCount
         ));
         
-        $this_user=$this->paginate($this->UserRelations);
-            $this->set(array(
-                'allRecordCount' => $this_user->count()
-        ));
+        $schedules=$this->paginate($query);
         
-        $this->set('schedules', $arr);
+        $this->set('schedules', $schedules);
         $this->set('_serialize', ['schedules']);
     }
     

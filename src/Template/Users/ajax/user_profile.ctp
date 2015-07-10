@@ -1,5 +1,20 @@
 <div class="span3">
-        <img src="<?php echo SITE_UPLOADS; ?>images/users_profile/thumb/<?php echo $userData->photo; ?>" alt="User Image" />
+    <?php
+        if(!empty($userData->photo))
+        {
+    ?>
+            <img src="<?php echo SITE_UPLOADS; ?>images/users_profile/thumb/<?php echo $userData->photo; ?>" alt="User Image" />
+    <?php
+        }
+        else
+        {
+    ?>
+            <img src="<?php echo SITE_UPLOADS; ?>images/noimage.jpg" alt="User Image" />
+    <?php
+            
+        }
+    ?>
+        
 </div>
 <div class="span9" >
     <table class="table table-bordered">

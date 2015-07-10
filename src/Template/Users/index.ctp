@@ -14,49 +14,47 @@ if($session->check('login_error')){
 <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
 
  <div class="span6">
-                    <div class="utopia-login">
-                        <h1>Gym Fitness Admin Access</h1>
+     <div class="utopia-login">
+         <h1>Gym Fitness Admin Access</h1>
+         <?php
+         echo $this->Form->create();
+         ?>
+         
+             
+             <?php
+             echo $this->Form->input('username',['type'=>'text','placeholder'=>'Username','class'=>'span12 utopia-fluid-input validate[required]', 'value' => $username]);
+             
+             ?>
+             
+
+            
+             <?php
+             echo $this->Form->input('password',['type'=>'password','placeholder'=>'**********','class'=>'span12 utopia-fluid-input validate[required]', 'value' => $password]);
+             
+             ?>
+             
+
+             <ul class="utopia-login-action">
+                 <li>
+          <?php
+          
+             echo $this->Form->input('login',['type'=>'submit','class'=>'btn span4','value'=>'Login','label'=>false]);
+             
+             ?>
+                    
+                     <div class="pull-right">
                         <?php
-                        echo $this->Form->create();
-                        ?>
-                        
-                            
-                            <?php
-                            echo $this->Form->input('username',['type'=>'text','placeholder'=>'Username','class'=>'span12 utopia-fluid-input validate[required]']);
-                            
-                            ?>
-                            
+              
+echo $this->Form->checkbox('remember_me', ['value' =>'on','hiddenField' => false, 'checked' => true]);
+        ?> Remember me !</div> 
+                 </li>
+             </ul>
 
-                           
-                            <?php
-                            echo $this->Form->input('password',['type'=>'password','placeholder'=>'**********','class'=>'span12 utopia-fluid-input validate[required]']);
-                            
-                            ?>
-                            
-
-                            <ul class="utopia-login-action">
-                                <li>
-                         <?php
-                      
-                           
-                        
-                            echo $this->Form->input('login',['type'=>'submit','class'=>'btn span4','value'=>'Login','label'=>false]);
-                            
-                            ?>
-                                   
-                                    <div class="pull-right">
-                                       <?php
-                             
-echo $this->Form->checkbox('remember_me', ['value' =>'on','hiddenField' => false]);
-                       ?> Remember me !</div> 
-                                </li>
-                            </ul>
-
-                                
-                            <!-- <label><a href="<?php echo BASE_URL ?>administrator/forgotpass">Can't access your account?</a></label>-->
-                       
-                      <?php echo $this->Form->end();?>
-                    </div>
-                </div>
+                 
+             <!-- <label><a href="<?php echo BASE_URL ?>administrator/forgotpass">Can't access your account?</a></label>-->
+        
+       <?php echo $this->Form->end();?>
+     </div>
+ </div>
 
            

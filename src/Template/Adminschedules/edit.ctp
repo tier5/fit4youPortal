@@ -150,10 +150,38 @@ $().ready(function() {
 		dateFormat: 'yy-mm-dd',
 		defaultDate: new Date()
 	    });
-	    
-	    jQuery('#start_time').timepicker();
-	    jQuery('#end_time').timepicker();
-        });
+
+	    $('#start_time').timepicker({
+		showLeadingZero: false,
+		onSelect: tpStartSelect,
+		
+	    });
+	    $('#end_time').timepicker({
+		showLeadingZero: false,
+		onSelect: tpEndSelect,
+		
+	    });
+	 });
+
+	// when start time change, update minimum for end timepicker
+	function tpStartSelect( time, endTimePickerInst ) {
+	   $('#end_time').timepicker('option', {
+	       minTime: {
+		   hour: endTimePickerInst.hours,
+		   minute: endTimePickerInst.minutes
+	       }
+	   });
+	}
+	
+	// when end time change, update maximum for start timepicker
+	function tpEndSelect( time, startTimePickerInst ) {
+	   $('#timepicker_start').timepicker('option', {
+	       maxTime: {
+		   hour: startTimePickerInst.hours,
+		   minute: startTimePickerInst.minutes
+	       }
+	   });
+	}
 		
 		
 

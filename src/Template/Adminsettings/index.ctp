@@ -32,6 +32,7 @@
 					<!--<th><input type="checkbox" class="utopia-check-all"></th>-->
 					<th><?= $this->Paginator->sort('name','Name') ?></th>
 					<th><?= $this->Paginator->sort('value','Value') ?></th>
+					<th><?= $this->Paginator->sort('description','Description') ?></th>
 					<th class="actions"><?= __('Actions') ?></th>
 				    </tr>
                                 </thead>
@@ -43,6 +44,7 @@
 				    <tr>
 					<td><?= h($setting['name']) ?></td>
 					<td><?= h($setting['value']); ?></td>
+					<td><?= h($setting['description']); ?></td>
 					<td>
 					    <a href="<?php echo BASE_URL; ?>administrator/settings/edit/<?php echo $setting['id']; ?>">Edit</a>
 					    

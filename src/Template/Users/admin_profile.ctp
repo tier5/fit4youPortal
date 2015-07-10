@@ -14,15 +14,15 @@
     </div>
 </div>
 
+    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
+    <span class="msg_class"><?= $this->Flash->render('negative') ?></span>
+    
 <section class="utopia-widget utopia-form-box section" id="formElement">
     <div class="utopia-widget-title">
         <?php echo $this->Html->image('../backend/img/icons2/software24.png',array("class" => "utopia-widget-icon"));?>
         <!--<img class="utopia-widget-icon" src="../backend/img/icons2/software24.png">-->
         <span>Admin Details</span>
     </div>
-
-    <span class="msg_class"><?= $this->Flash->render('positive') ?></span>
-    <span class="msg_class"><?= $this->Flash->render('negative') ?></span>
 
     <div class="row-fluid">
         <div class="utopia-widget-content">
@@ -114,7 +114,20 @@
                             <label for="input01" class="control-label">&nbsp;</label>
 
                             <div class="controls">
+                            <?php
+                                if(!empty($users['photo']))
+                                {
+                            ?>
                                 <img src="<?php echo SITE_UPLOADS; ?>images/users_profile/thumb/<?php echo $users['photo']; ?>" alt="User Image" />
+                            <?php
+                                }
+                                else
+                                {
+                            ?>
+                                <img src="<?php echo SITE_UPLOADS; ?>images/noimage.jpg" alt="User Image" />
+                            <?php
+                                }
+                            ?>
                             </div>
                         </div>
                         
@@ -163,7 +176,7 @@ $().ready(function() {
         // validate signup form on keyup and submit
         $("#addFrm").validate({
                 rules: {
-                        userPin: {required: true, minimum: 4, maximum: 6, number: true},
+                        userPin: {required: true, minlength: 4, maxlength: 6, number: true},
                         firstName: "required",
                         lastName: "required",
                         username: {

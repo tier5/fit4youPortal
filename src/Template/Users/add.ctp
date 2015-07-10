@@ -46,7 +46,7 @@
                             <label for="input01" class="control-label">User Pin Code<span style="color:#ff0000;">*</span></label>
 
                             <div class="controls">
-                                <input value="" type="text" value="" name="userPin" id="userPin" class="span10" id="input01">
+                                <input type="text" value="" name="userPin" id="userPin" class="span10" id="input01">
                             </div>
                         </div>
 
@@ -174,7 +174,12 @@ $().ready(function() {
         $("#addFrm").validate({
                 rules: {
                         role: "required",
-                        userPin: {required: true, minlength: 4, maxlength: 6, number: true},
+                        userPin: {
+                            required: true,
+                            minlength: 4,
+                            maxlength: 6,
+                            number: true,
+                        },
                         firstName: "required",
                         lastName: "required",
                         

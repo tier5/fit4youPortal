@@ -85,8 +85,8 @@
                                 <tr>
                                     <td><?= h($data['client']['firstName']) ?>&nbsp;<?= h($data['client']['lastName']) ?></td>
                                     <td><?= h($data['trainer']['firstName']) ?>&nbsp;<?= h($data['trainer']['lastName']) ?></td>
-                                    <td><?= h($start_time['date']) ?></td>
-                                    <td><?= h($end_time['date']) ?></td>
+                                    <td><?= h(date('Y-m-d H:i:s',strtotime($start_time['date']))) ?></td>
+                                    <td><?= h(date('Y-m-d H:i:s',strtotime($end_time['date']))) ?></td>
                                     <td>
                                         <a href="<?php echo BASE_URL; ?>administrator/schedule/edit/<?php echo  $data['id']; ?>">Edit</a>
                                         &nbsp;|&nbsp;

@@ -4,7 +4,7 @@
                               <?php
                                    echo $this->Html->image('../backend/img/icons/user.png');
                               ?>
-                                <a href="javascript:void(0)">Admin user</a>
+                                <a href="javascript:void(0)"><?php $admin_data = $this->request->session()->read('admin.details'); echo $admin_data['username'];?></a>
                             </div>
 
                             <div class="user-dropbox">

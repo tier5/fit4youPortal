@@ -14,16 +14,7 @@ class AdmingymsController extends AppController{
         $session = $this->request->session();
         $adminDetls = $session->read('admin.details');
         $this->set('active_class','gyms');
-        
-        /*$hasAccess = $this->hasAccess($adminDetls->id,'1','moduleList');
-        if($hasAccess=='0' && $adminDetls->id!='1'){
-            $this->Flash->success("You don't have access to this page.", [
-               'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'admin/dashboard');        
-        }*/
-        
-        
+
         $this->loadModel('Gyms');
         $this->set('title',"Admin|List Gyms");
         $this->set('description','Admin|List Gym');
@@ -34,6 +25,9 @@ class AdmingymsController extends AppController{
                     
     	$this->paginate = [
         		'limit' =>  $totRecordsPerPage,
+			'order' => [
+				'Gyms.id' => 'desc'
+			]
         	];
         
         $thisGyms = $this->paginate($this->Gyms);
@@ -51,13 +45,6 @@ class AdmingymsController extends AppController{
         $this->set('active_class','gyms');
         
         $adminDetls = $session->read('admin.details');
-        /*$hasAccess = $this->hasAccess($adminDetls->id,'1','moduleAdd');
-        if($hasAccess=='0' && $adminDetls->id!='1'){
-            $this->Flash->success("You don't have access to this page.", [
-               'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'admin/dashboard');        
-        }*/
         
         $validationErrMsg = array();
         $fieldsValue = array();

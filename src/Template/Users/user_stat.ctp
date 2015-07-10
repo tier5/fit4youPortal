@@ -1,4 +1,4 @@
-<div class="body-container span10">
+<div class="body-container span10 list_grid">
 
             <div class="row-fluid">
                 <div class="span12">
@@ -32,14 +32,14 @@
 
                                 <tbody>   
 				    <tr>
-					    <td><input type="text" value="" placeholder="weight" name="weight" id="weight" class="span10" ></td>
-					    <td><input type="text" value="" name="chest" placeholder="chest" id="chest" class="span10" ></td>
-					    <td><input type="text" value="" name="waist" placeholder="waist" id="waist" class="span10"></td>
-					    <td><input type="text" value="" name="biceps" placeholder="biceps" id="biceps" class="span10"></td>
-					    <td><input type="text" value="" name="triceps" placeholder="triceps" id="triceps" class="span10"></td>
+					    <td><input type="text" value="" placeholder="Weight" name="weight" id="weight" class="span10" ></td>
+					    <td><input type="text" value="" name="chest" placeholder="Chest" id="chest" class="span10" ></td>
+					    <td><input type="text" value="" name="waist" placeholder="Waist" id="waist" class="span10"></td>
+					    <td><input type="text" value="" name="biceps" placeholder="Biceps" id="biceps" class="span10"></td>
+					    <td><input type="text" value="" name="triceps" placeholder="Triceps" id="triceps" class="span10"></td>
 					    <td><input type="hidden" value="<?php echo $user_id;?>" name="user_id" id="user_id" class="span10" >
 					    <input type="hidden" value="" name="id" id="id" class="span10" >
-    <input type="button" value="Submit" name="submit" id="submitBtn"></td>
+    <input type="button" value="Submit" name="submit" id="submit" class="span12" style="background:#00ADEE; color:#fff;" ></td>
 				    </tr>                                
                                 </tbody>
                                 
@@ -114,6 +114,7 @@
 
 				    <div class="select-box">
 						<select name="options" id="options">
+						       <option value="">Select Stat Option</option>
 						       <option value="weight">Weight</option>
 						       <option value="chest">Chest</option>
 						       <option value="waist">Waist</option>
@@ -122,7 +123,7 @@
 						</select>
 				    </div>
 				    <div style="clear:both;"></div>
-				    <div id="curve_chart" style="height: auto !important;"></div>
+				    <div id="curve_chart" style="height: auto !important;text-align: center;font-size: 16px;"><b>Select option to view chart</b></div>
 					    
 				    			
 				    
@@ -159,6 +160,10 @@ $(document).ready(function(){
 		var waist = $('#waist').val();
 		var biceps = $('#biceps').val();
 		var triceps = $('#triceps').val();
+		if(weight == '' || chest == '' || waist == '' || biceps == '' || triceps == '')
+		{
+			$('#msg').html('Fields cannot be empty');
+		}
 		var id = $('#id').val();
 		$.ajax({
 			type: "post",
@@ -258,7 +263,7 @@ $(function(){
   function drawChart(type) 
       {
 	
-	if (type == 'weight')
+	if (type == 'weight' || type == '')
 	{
 		    var data = google.visualization.arrayToDataTable([['Days', 'Weight'],
 		      <?php foreach ($stats as $stat): ?>

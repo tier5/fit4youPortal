@@ -116,7 +116,20 @@
                             <label for="input01" class="control-label">&nbsp;</label>
 
                             <div class="controls">
+                            <?php
+                                if(!empty($users['photo']))
+                                {
+                            ?>
                                 <img src="<?php echo SITE_UPLOADS; ?>images/users_profile/thumb/<?php echo $users['photo']; ?>" alt="User Image" />
+                            <?php
+                                }
+                                else
+                                {
+                            ?>
+                                <img src="<?php echo SITE_UPLOADS; ?>images/noimage.jpg" alt="User Image" />
+                            <?php
+                                }
+                            ?>
                             </div>
                         </div>
                         

@@ -42,7 +42,7 @@
                             <label for="input01" class="control-label">Description<span style="color:#ff0000;">*</span></label>
 
                             <div class="controls">
-                                <input type="text" value="<?php echo $setting['description']; ?>" name="description" id="description" class="span10" id="input01">
+                                <textarea name="description" id="description" class="span10"><?php echo $setting['description']; ?></textarea>
                             </div>
                         </div>
                         

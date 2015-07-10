@@ -76,6 +76,7 @@ class UsersController extends AppController
 		    $session->write('admin.details',$user_details);
 		    if(isset($data_arr['remember_me']))
 		    {
+			echo $this->Cookie->delete('admin_username');
 			if($data_arr['remember_me']=='on')
 			{
 			    if($this->Cookie->check('admin_username'))
@@ -91,11 +92,16 @@ class UsersController extends AppController
 			    $this->Cookie->write('admin_password',$data_arr['password'],false,31536000);
 			}
 		    }
+		    else
+		    {
+			$this->Cookie->delete('admin_password');
+			$this->Cookie->delete('admin_username');
+			
+		    }
 		    return $this->redirect($this->Auth->redirectUrl(BASE_URL.'administrator/dashboard'));
 	       }
 	       else
 	       {
-	
 		   $session->write('login_error',1);
 		   return $this->redirect(BASE_URL.'administrator');
 	
@@ -123,8 +129,8 @@ class UsersController extends AppController
 	
 	
 	
-	    $this->set('admin_username',$username);
-	    $this->set('admin_password',$password);
+	    $this->set('username',$username);
+	    $this->set('password',$password);
 	    if($this->Cookie->check('admin_username') && $this->Cookie->check('admin_password'))
 	    {
 		    $this->set('remember_me','on');
@@ -172,12 +178,6 @@ public function edit($id=null)
    
     $allRoles = $this->Roles->find('all');
 
-    $validationErrMsg = array();
-    $fieldsValue = array();
-    $organisationTeams = array();
-    $hasError = 0;
-    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
-
 
     $this->set('title',"Admin|Edit Client");
     $this->set('description','Edit Team Client');
@@ -189,18 +189,25 @@ public function edit($id=null)
     if ($this->request->is('post')){      
         $postData = $this->request->data;
 	
+	$error = '0';
+	
 	$pin=$this->Users->find('all',
             array('conditions' => array(
                 'userPin' => $postData['userPin'],
                 'is_deleted'  => '0'
             )))->count();
 	
-	if($pin>1)
+	$my_pin=$this->Users->find('all',
+            array('conditions' => array(
+                'userPin' => $postData['userPin'],
+		'id' => $id,
+                'is_deleted'  => '0'
+            )))->count();
+	
+	if($pin>0 && $my_pin!= $postData['userPin'])
 	{
-		$this->Flash->success('Pin already exist', [
-                'key' => 'negative'
-		]);
-		$this->redirect(BASE_URL.'administrator/user/edit/'.$id);
+		$error = '1';
+		
 	}
         
         if($_FILES['usersImage']['name']!=''){
@@ -288,20 +295,39 @@ public function edit($id=null)
 			
 		}
             }
-
-            $users = $this->Users->patchEntity($users, $databaseArr);
-            $this->Users->save($users);
-            $this->Flash->success('The user has been saved', [
-                'key' => 'positive'
-            ]);
-	    if($postData['role'] == 'CLIENT')
-	    {
-		$this->redirect(BASE_URL.'administrator/client');
-	    }
-	    else
-	    {
-		$this->redirect(BASE_URL.'administrator/trainer');
-	    }
+	    //echo $error;exit;
+	if($error == '0')
+	{
+		$users = $this->Users->patchEntity($users, $databaseArr);
+		$this->Users->save($users);
+		
+		if($postData['role'] == 'CLIENT')
+		{
+			$this->Flash->success('The user has been saved', [
+				'key' => 'positive'
+			]);
+			$this->redirect(BASE_URL.'administrator/client');
+		}
+		else
+		{
+			$this->Flash->success('The user has been saved', [
+				'key' => 'positive'
+			]);
+			$this->redirect(BASE_URL.'administrator/trainer');
+		}
+	    
+		
+	}
+	else
+	{
+		
+		$this->Flash->success('Pin already exist', [
+		    'key' => 'negative'
+		]);
+		$this->redirect(BASE_URL.'administrator/user/edit/'.$id);
+	}
+            
+	    
 
 
     }    
@@ -335,6 +361,8 @@ public function add()
 
         $postData = $this->request->data;
 	
+	$error = '0';
+	
 	$pin=$this->Users->find('all',
             array('conditions' => array(
                 'userPin' => $postData['userPin'],
@@ -343,10 +371,7 @@ public function add()
 	
 	if($pin>0)
 	{
-		$this->Flash->success('Pin already exist', [
-                'key' => 'negative'
-		]);
-		$this->redirect(BASE_URL.'administrator/user/add');
+		$error = '1';
 	}
         
         if($_FILES['usersImage']['name']!=''){
@@ -393,16 +418,45 @@ public function add()
 		    'zip'               =>      $postData['zip'],
 		    'address'           =>      $postData['address'],
 		    'photo'             =>      $postData['photo'],
-		    'join_date'	    =>      Time::now(),
-		    'update_date'	    =>      Time::now(),
+		    'join_date'	    	=>      Time::now(),
+		    'update_date'	=>      Time::now(),
 		    'is_login'          =>      '0',
 		    'is_active'         =>      '1',
 		    'is_deleted'        =>      '0'
 	    );         
 	    
-
-	$user = $this->Users->patchEntity($user, $databaseArr);
-	$this->Users->save($user);
+	if($error == 0)
+	{
+		$user = $this->Users->patchEntity($user, $databaseArr);
+		$this->Users->save($user);
+		
+		if($postData['role'] == 'CLIENT')
+		{
+			$this->Flash->success('The client profile has been saved', [
+				'key' => 'positive'
+			]);
+			$this->redirect(BASE_URL.'administrator/client');
+		}
+		else
+		{
+			$this->Flash->success('The trainer profile has been saved', [
+				'key' => 'positive'
+			]);
+			$this->redirect(BASE_URL.'administrator/trainer');
+		}
+	
+		$this->redirect(BASE_URL.'administrator/user/add');
+	}
+	else
+	{
+		$this->Flash->success('Pin already exist', [
+                'key' => 'negative'
+		]);
+		
+		$this->redirect(BASE_URL.'administrator/user/add');
+	}
+	
+	
 	
 	/*$mailBody = '
 	<div style="width:700px; border:1px solid black;">
@@ -432,22 +486,6 @@ public function add()
 		    ->subject($subject)
 		    ->send($mailBody);*/
 
-	
-
-	if($postData['role'] == 'CLIENT')
-	{
-		$this->Flash->success('The client profile has been saved', [
-			'key' => 'positive'
-		]);
-		$this->redirect(BASE_URL.'administrator/client');
-	}
-	else
-	{
-		$this->Flash->success('The trainer profile has been saved', [
-			'key' => 'positive'
-		]);
-		$this->redirect(BASE_URL.'administrator/trainer');
-	}
             
     }
    
@@ -474,7 +512,10 @@ public function userlist()
                 'Users.id <>' => 1,
 		'Users.role'  => 'CLIENT',
                 'is_deleted' => '0'
-            ]
+            ],
+	'order' => [
+            'Users.id' => 'desc'
+        ]
         ];
 
     
@@ -507,7 +548,10 @@ public function trainerlist()
                 'Users.id <>' => 1,
 		'Users.role'  => 'TRAINER',
                 'is_deleted' => '0'
-            ]
+            ],
+	'order' => [
+            'Users.id' => 'desc'
+        ]
         ];
 
     
@@ -559,10 +603,6 @@ public function userStat($user_id=NULL)
     $this->set('title','Admin|Client Statistics');
     $this->set('description','Admin|Client Statistics');
     $this->set('userRole',$adminDetls->role);
-    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
-    $validationErrMsg = array();
-    $fieldsValue = array();
-    $hasError = 0;
    
     $this->loadModel('UserStats');
     $this->loadModel('Users');
@@ -609,6 +649,13 @@ public function userStat($user_id=NULL)
 		
 		$query = $this->UserStats->find()->where(['UserStats.user_id' => $user_id]);
 		$user_details = $this->Users->find()->where(['Users.id' => $user_id])->first();
+		$totRecordsPerPage = 10;
+		$this->paginate = [
+		       'limit'=>$totRecordsPerPage,
+		       'order' => [
+			   'UserStats.id' => 'desc'
+		       ]
+	       ];
 		$stats=$this->paginate($query);
 		$this->set('stats',$stats);
 		$this->set('user_id',$user_id);
@@ -617,11 +664,16 @@ public function userStat($user_id=NULL)
 		$this->render('ajax/user_stat');
     }
 	//$query = $this->UserStats->find('all')
-	$query = $this->UserStats->find()->where(['UserStats.user_id' => $user_id]);
+	$query = $this->UserStats->find()->where(['UserStats.user_id' => $user_id])->order(['id' => 'desc']);
 	$user_details = $this->Users->find()->where(['Users.id' => $user_id])->first();		
 
-
-
+	$totRecordsPerPage = 10;
+	 $this->paginate = [
+		'limit'=>$totRecordsPerPage,
+		'order' => [
+		    'UserStats.id' => 'desc'
+		]
+	];
    	$stats=$this->paginate($query);
 	$this->set('stats',$stats);
 	$this->set('user_id',$user_id);
@@ -781,7 +833,7 @@ public function adminProfile()
 {
 	
 	Time::setToStringFormat('YYYY-MM-dd h:i:s');
-	$this->set('active_class','user');
+	$this->set('active_class','');
 	$session = $this->request->session();
 	$adminDetls = $session->read('admin.details');
     
@@ -798,8 +850,29 @@ public function adminProfile()
    
     if ($this->request->is('post'))
     {      
-        $postData = $this->request->data; 
+        $postData = $this->request->data;
+	
+	$error = '0';
         
+	$pin=$this->Users->find('all',
+            array('conditions' => array(
+                'userPin' => $postData['userPin'],
+                'is_deleted'  => '0'
+            )))->count();
+	
+	$my_pin=$this->Users->find('all',
+            array('conditions' => array(
+                'userPin' => $postData['userPin'],
+		'id' => $adminDetls->id,
+                'is_deleted'  => '0'
+            )))->count();
+	
+	if($pin>0 && $my_pin!= $postData['userPin'])
+	{
+		$error = '1';
+		
+	}
+	
         if($_FILES['usersImage']['name']!=''){
             $fileName = $_FILES['usersImage']['name'];
             $fileNameArr = explode(".",$fileName);
@@ -864,14 +937,29 @@ public function adminProfile()
 		);
 		
             }
+		
+		if($error == 0)
+		{
+			$user = $this->Users->patchEntity($users, $databaseArr);
+			$this->Users->save($users);
+			
+			$this->Flash->success('Profile has been updated', [
+				'key' => 'positive'
+			]);
+			
+			return $this->redirect(BASE_URL.'administrator/admin-profile');
 
-            $users = $this->Users->patchEntity($users, $databaseArr);
-            $this->Users->save($users);
-            $this->Flash->success('Profile has been updated', [
-                'key' => 'positive'
-            ]);
-            return $this->redirect(BASE_URL.'administrator/admin-profile');
+		}
+		else
+		{
+			$this->Flash->success('Pin already exist', [
+			'key' => 'negative'
+			]);
+			
+			return $this->redirect(BASE_URL.'administrator/admin-profile');
 
+		}
+            
 
     }    
     

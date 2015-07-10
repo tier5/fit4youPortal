@@ -25,7 +25,7 @@
                 <td>
                     <a href="javascript:void(0);" onclick="edit_stat('<?php echo $stat->id; ?>','<?php echo $stat->weight; ?>','<?php echo $stat->chest; ?>','<?php echo $stat->waist; ?>','<?php echo $stat->biceps; ?>','<?php echo $stat->triceps; ?>');">Edit</a>
                     &nbsp;|&nbsp;
-                    <a onClick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete/<?php echo  $stat->id; ?>">Delete</a>
+                    <a onClick="return delConfirm();" href="<?php echo BASE_URL; ?>administrator/user/delete-stat/<?php echo  $stat->id; ?>/<?php echo $user_id;?>">Delete</a>
                 </td>
             </tr>                                
             <?php endforeach; ?>
@@ -61,6 +61,7 @@
 
             <div class="select-box">
                         <select name="options" id="options">
+                               <option value="">Select Stat Option</option>
                                <option value="weight">Weight</option>
                                <option value="chest">Chest</option>
                                <option value="waist">Waist</option>
@@ -75,3 +76,10 @@
             
             <?php } ?>
 </span>
+<script>
+    $('#options').on('change',function(){
+	    //google.setOnLoadCallback(drawChart);
+	    var type = $('#options').val();
+	    drawChart(type);
+    });
+</script>

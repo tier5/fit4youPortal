@@ -77,9 +77,24 @@ class WebservicesController extends AppController
 					$end_time = get_object_vars($data['end_time']);
 					$data['start_time'] =  $start_time['date'];
 					$data['end_time'] =  $end_time['date'];
-					$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
-					$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
-					//pr($data);exit;
+					if(!empty($data['client']['photo']))
+					{
+						$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
+					}
+					else
+					{
+						$data['client']['photo'] = '';
+					}
+					
+					if(!empty($data['trainer']['photo']))
+					{
+						$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
+					}
+					else
+					{
+						$data['trainer']['photo'] = '';
+					}
+					
 					echo json_encode($data);
 					exit;
 				}
@@ -93,7 +108,10 @@ class WebservicesController extends AppController
 			}
 			else
 			{
-				echo json_encode(['success'=>0,'msg'=>'Sorry no session found']);
+				$data['client'] = $client_data;
+				$data['trainer'] = '';
+				$data['success'] = '1';
+				echo json_encode($data);
 				exit;
 				
 			}
@@ -134,7 +152,7 @@ class WebservicesController extends AppController
 				->set(['status' => '1'])
 				->where(['start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
 				->orWhere(['start_time >=' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
-				->andWhere(['client_id' => $trainer_data['id']])
+				->andWhere(['trainer_id' => $trainer_data['id']])
 				->andWhere(['status' => '0'])
 				->execute();
 			
@@ -160,8 +178,22 @@ class WebservicesController extends AppController
 					$end_time = get_object_vars($data['end_time']);
 					$data['start_time'] =  $start_time['date'];
 					$data['end_time'] =  $end_time['date'];
-					$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
-					$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
+					if(!empty($data['client']['photo']))
+					{	
+						$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
+					}
+					else
+					{
+						$data['client']['photo'] = '';
+					}
+					if(!empty($data['trainer']['photo']))
+					{
+						$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
+					}
+					else
+					{
+						$data['trainer']['photo'] = '';
+					}
 					echo json_encode($data);
 					exit;
 				}
@@ -174,7 +206,10 @@ class WebservicesController extends AppController
 			}
 			else
 			{
-				echo json_encode(['success'=>0,'msg'=>'Sorry no session found']);
+				$data['trainer'] = $trainer_data;
+				$data['client'] = '';
+				$data['success'] = '1';
+				echo json_encode($data);
 				exit;
 				
 			}
@@ -257,7 +292,14 @@ class WebservicesController extends AppController
 			
 			$data['status'] = '1';
 			$data['admin_data'] = $admin_data;
-			$data['admin_data']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$admin_data['photo'];
+			if($admin_data['photo'])
+			{
+				$data['admin_data']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$admin_data['photo'];
+			}
+			else
+			{
+				$data['admin_data']['photo'] = '';
+			}
 			$data['gym_data'] = $gym_data;
 			
 			$query = $this->Users->query();
