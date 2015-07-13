@@ -108,8 +108,38 @@ class WebservicesController extends AppController
 			}
 			else
 			{
+				$data['trainer'] = array();
+				$data['client'] = array();
 				$data['client'] = $client_data;
-				$data['trainer'] = '';
+				if(!empty($client_data['photo']))
+				{
+					$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
+				}
+				else
+				{
+					$data['client']['photo'] = '';
+				}
+				
+				$data['start_time'] = '';
+				$data['end_time'] = '';
+				$data['status'] = '';
+				$data['xtime'] = '';
+				$data['ytime'] = '';
+				$data['trainer_id'] = $client_data['id'];
+				$data['client_id'] = '';
+				$data['trainer'] =[
+					'id' 		=> '',
+					'firstName' 	=> '',
+					'lastName' 	=> '',
+					'userPin' 	=> '',
+					'city' 		=> '',
+					'state' 	=> '',
+					'zip' 		=> '',
+					'address' 	=> '',
+					'photo' 	=> '',
+					'status' 	=> '',
+					
+				];
 				$data['success'] = '1';
 				echo json_encode($data);
 				exit;
@@ -206,8 +236,36 @@ class WebservicesController extends AppController
 			}
 			else
 			{
+				$data['trainer'] = array();
+				$data['client'] = array();
 				$data['trainer'] = $trainer_data;
-				$data['client'] = '';
+				if(!empty($trainer_data['photo']))
+				{
+					$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$trainer_data['photo'];
+				}
+				else
+				{
+					$data['trainer']['photo'] = '';
+				}
+				
+				$data['start_time'] = '';
+				$data['end_time'] = '';
+				$data['status'] = '';
+				$data['xtime'] = '';
+				$data['ytime'] = '';
+				$data['client_id'] = '';
+				$data['trainer_id'] = $trainer_data['id'];
+				$data['client'] =[
+					'id' 		=> '',
+					'firstName' 	=> '',
+					'lastName' 	=> '',
+					'userPin' 	=> '',
+					'city' 		=> '',
+					'state' 	=> '',
+					'zip' 		=> '',
+					'address' 	=> '',
+					'photo' 	=> '',
+				];
 				$data['success'] = '1';
 				echo json_encode($data);
 				exit;

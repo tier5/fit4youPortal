@@ -44,6 +44,31 @@ class AppController extends Controller
         $this->loadComponent('Cookie');
         $this->loadComponent('RequestHandler');
         
+        $this->loadComponent('Auth', [
+                                        'authorize'=> 'Controller',//added this line
+                                        'authenticate' => [
+                                        'Form' => [
+                                                  'fields' => [
+                                                                 'username' => 'username',
+                                                                 'password' => 'password'
+                                                                 ]
+                                                  ,
+                                                  'scope' => [
+                                                                 'Users.is_active'=>1,
+                                                                 'Users.is_deleted'=>0
+                                             
+                                                                 ]
+                                                  ]
+                                        ],
+		'loginAction' => [
+		'controller' => 'Users',
+		'action' => 'index'
+		],
+		
+		'unauthorizedRedirect' => $this->referer(),
+                'logoutRedirect'=> ['controller'=>'Users','action'=>'logout'],
+	  ]);
+        
     }
     
     public function beforeFilter(Event $event){

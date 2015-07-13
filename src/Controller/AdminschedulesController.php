@@ -72,7 +72,9 @@ class AdminschedulesController extends AppController{
         if($this->request->is('post'))
         {
            $postData = $this->request->data;
-            echo $postData['date'].$postData['start_time'];
+           $postData['date'].$postData['start_time'];
+           
+           
 
             $schedules = $this->UserRelations->newEntity();                       
             $databaseArr = array(
@@ -82,17 +84,32 @@ class AdminschedulesController extends AppController{
                 'end_time'      =>      Time::createFromTimestamp(strtotime($postData['date'].' '.$postData['end_time'].':00')),
                 'date'          =>      Time::now(),
                 'status'        =>      '0'
-            );  
+            );
+            
+            $find = $this->UserRelations->find()
+                    ->where(['trainer_id' => $databaseArr['trainer_id']])
+                    ->orWhere(['client_id' => $databaseArr['client_id']])
+		    ->andWhere(['start_time <=' => $databaseArr['start_time'], 'end_time >=' => $databaseArr['start_time']])
+                    ->count();
 
-            $schedules = $this->UserRelations->patchEntity($schedules, $databaseArr);
-            $result=$this->UserRelations->save($schedules);
+            if($find == 0)
+            {
+                $schedules = $this->UserRelations->patchEntity($schedules, $databaseArr);
+                $result=$this->UserRelations->save($schedules);
+                
+                $lastRoleId = $result->id;
 
-            $lastRoleId = $result->id;
-
-            $this->Flash->success('Schedules has been added successfully.', [
-               'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'administrator/schedule');
+                $this->Flash->success('Schedules has been added successfully.', [
+                   'key' => 'positive'
+                ]);
+                $this->redirect(BASE_URL.'administrator/schedule');
+            }
+            else
+            {
+                $this->Flash->success('There is a session already exisit in this time slot.', [
+                   'key' => 'negative'
+                ]);
+            }
             
         }
         
@@ -145,18 +162,36 @@ class AdminschedulesController extends AppController{
                 'end_time'      =>      Time::createFromTimestamp(strtotime($postData['date'].' '.$postData['end_time'].':00')),
                 'date'          =>      Time::now(),
                 'status'        =>      '0'
-            ); 
-            $query = $this->UserRelations->query();
-            $flag = $query->update()
+            );
+            
+            $find = $this->UserRelations->find()
+                    ->where(['trainer_id' => $databaseArr['trainer_id']])
+                    ->orWhere(['client_id' => $databaseArr['client_id']])
+		    ->andWhere(['start_time <=' => $databaseArr['start_time'], 'end_time >=' => $databaseArr['start_time']])
+                    ->andWhere(['id !=' => $id])
+                    ->count();
+                           
+
+            if($find == 0)
+            {
+                $query = $this->UserRelations->query();
+                $flag = $query->update()
                     ->set($databaseArr)
                     ->where(['id' => $postData['id']])
-                    ->execute();       
+                    ->execute();
 
-          
-            $this->Flash->success('Schedule has been updated successfully.', [
-                'key' => 'positive'
-            ]);
-            $this->redirect(BASE_URL.'administrator/schedule');
+                $this->Flash->success('Schedule has been updated successfully.', [
+                    'key' => 'positive'
+                ]);
+                $this->redirect(BASE_URL.'administrator/schedule');
+            }
+            else
+            {
+                $this->Flash->success('There is a session already exisit in this time slot.', [
+                   'key' => 'negative'
+                ]);
+            }
+            
         }
         
         $this->set('clients',$clients);

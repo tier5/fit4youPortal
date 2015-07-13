@@ -25,29 +25,7 @@ class UsersController extends AppController
 	    parent::initialize();
 	    
 	    
-		$this->loadComponent('Auth', [
-                                        'authorize'=> 'Controller',//added this line
-                                        'authenticate' => [
-                                        'Form' => [
-                                                  'fields' => [
-                                                                 'username' => 'username',
-                                                                 'password' => 'password'
-                                                                 ]
-                                                  ,
-                                                  'scope' => [
-                                                                 'Users.is_active'=>1,
-                                                                 'Users.is_deleted'=>0
-                                             
-                                                                 ]
-                                                  ]
-                                        ],
-		'loginAction' => [
-		'controller' => 'Users',
-		'action' => 'index'
-		],
 		
-		'unauthorizedRedirect' => $this->referer()
-		]);
 		
 	}
 
@@ -204,7 +182,7 @@ public function edit($id=null)
                 'is_deleted'  => '0'
             )))->count();
 	
-	if($pin>0 && $my_pin!= $postData['userPin'])
+	if(($pin>0 && $my_pin == 0))
 	{
 		$error = '1';
 		
@@ -867,7 +845,7 @@ public function adminProfile()
                 'is_deleted'  => '0'
             )))->count();
 	
-	if($pin>0 && $my_pin!= $postData['userPin'])
+	if(($pin>0 && $my_pin == 0))
 	{
 		$error = '1';
 		
