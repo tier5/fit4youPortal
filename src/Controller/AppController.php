@@ -45,21 +45,21 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler');
         
         $this->loadComponent('Auth', [
-                                        'authorize'=> 'Controller',//added this line
-                                        'authenticate' => [
-                                        'Form' => [
-                                                  'fields' => [
-                                                                 'username' => 'username',
-                                                                 'password' => 'password'
-                                                                 ]
-                                                  ,
-                                                  'scope' => [
-                                                                 'Users.is_active'=>1,
-                                                                 'Users.is_deleted'=>0
-                                             
-                                                                 ]
-                                                  ]
-                                        ],
+			'authorize'=> 'Controller',//added this line
+			'authenticate' => [
+			'Form' => [
+					  'fields' => [
+									 'username' => 'username',
+									 'password' => 'password'
+									 ]
+					  ,
+					  'scope' => [
+									 'Users.is_active'=>1,
+									 'Users.is_deleted'=>0
+				 
+									 ]
+					  ]
+			],
 		'loginAction' => [
 		'controller' => 'Users',
 		'action' => 'index'
@@ -73,10 +73,16 @@ class AppController extends Controller
     
     public function beforeFilter(Event $event){
         parent::beforeFilter($event);
+		
+		$session = $this->request->session();
+		
         $this->loadModel('Sitesettings');
         $settings_data = $this->Sitesettings->find('all')->toArray();
-        $this->settings['xtime'] = $settings_data[0]->value;
-        $this->settings['ytime'] = $settings_data[1]->value;
+		if(isset($settings_data[0]->value))
+			$this->settings['xtime'] = $settings_data[0]->value;
+        
+		if(isset($settings_data[1]->value))
+				$this->settings['ytime'] = $settings_data[1]->value;
         $session = $this->request->session();
         $uri=$_SERVER['REQUEST_URI']; //// uri defined 
              
@@ -94,7 +100,7 @@ class AppController extends Controller
             define('TYPE','FRONT');
             $this->layout='frontend';
         }
-        $this->set('authors',array('UNIFIED INFOTECH PVT. LTD.'));
+        $this->set('authors',array('Tier5'));
         
     }
     

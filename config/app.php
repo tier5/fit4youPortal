@@ -1,8 +1,15 @@
 <?php
 define('SITE_NAME','Gym-Fitness');
-define('BASE_URL','http://localhost/gym/');
+
+if($_SERVER['SERVER_NAME'] == "localhost")
+	define('BASE_URL','http://localhost/fit4youPortal/');
+else
+	define('BASE_URL','http://162.243.75.142/fit4youPortal/');
+
+
 define('SITE_UPLOADS',BASE_URL.'uploads/');
-define('HUMANIZED_SITE_NAME','localhost/gym/');
+define('HUMANIZED_SITE_NAME','localhost/fit4youPortal/');
+
 return [
     /**
      * Debug Level:
@@ -13,7 +20,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => true,
+    'debug' => false,
 
     /**
      * Configure basic information about the application.
@@ -225,8 +232,8 @@ return [
              */
             //'port' => 'nonstandard_port_number',
             'username' => 'root',
-            'password' => 'user123',
-            'database' => 'gym',
+            'password' => '',
+            'database' => 'fit4you',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'cacheMetadata' => true,

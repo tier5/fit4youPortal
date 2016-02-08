@@ -8,12 +8,15 @@ use Cake\Network\Email\Email;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\I18n\Time;
 use Cake\Network\Request;
+use Cake\ORM\TableRegistry;
+
 
 // src/Controller/UsersController.php
 
 class UsersController extends AppController
 {
 	var $uses=array('User');
+	//var $components = array('Auth');
 
 	public function beforeFilter(Event $event)
 	{
@@ -42,7 +45,7 @@ class UsersController extends AppController
 	    $session = $this->request->session();
 	    
 	    if($this->is_admin_logged()){
-		return $this->redirect(BASE_URL.'administrator/dashboard');
+			return $this->redirect(BASE_URL.'administrator/dashboard');
 	    }
 	    if($this->request->is('post')){
 	       $user = $this->Auth->identify();
@@ -118,6 +121,7 @@ class UsersController extends AppController
 		    $this->set('remember_me','off');
 	    }
 	}
+////////---> loading dashboard
 
 ////////---> loading dashboard
 
@@ -127,6 +131,10 @@ public function dashboard()
 	$this->set('description','Admin login panel '.SITE_NAME.' admin panel');
 	$this->set('authors',['Gym','Fitness','Gym App']);
 	$session = $this->request->session();
+	
+	print_r($session);
+	exit;
+	
 	$adminDetls = $session->read('admin.details');
 	$this->set('title',SITE_NAME." Admin Dashboard");
 	$this->set('description','Dashboard of '.SITE_NAME.' admin panel');
