@@ -231,20 +231,20 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'nonstandard_port_number',
-            'username' => 'root',
+            /*'username' => 'root',
             'password' => '',
             'database' => 'fit4you',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
-            'cacheMetadata' => true,
+            'cacheMetadata' => true,*/
 			
 			
-			/*'username' => 'root',
+			'username' => 'root',
             'password' => 'toor',
             'database' => 'gym',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
-            'cacheMetadata' => true,*/
+            'cacheMetadata' => true,
 			
 
             /**
