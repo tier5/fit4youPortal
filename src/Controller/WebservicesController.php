@@ -16,7 +16,16 @@ class WebservicesController extends AppController
 	public function beforeFilter(Event $event)
 	{		
 		parent::beforeFilter($event);
-		$this->Auth->allow('loginClient', 'loginTrainer', 'present');
+		
+		
+		//$this->Auth->allow('loginClientTest', 'loginClient',  'loginTrainer', 'loginTrainerTest', 'present', 'presentTest');
+		$this->Auth->allow('loginClientTest');
+		$this->Auth->allow('loginClient');
+		$this->Auth->allow('loginTrainer');
+		$this->Auth->allow('loginTrainerTest');
+		$this->Auth->allow('present');
+		$this->Auth->allow('presentTest');
+		
 	}
 	
 	
@@ -28,6 +37,12 @@ class WebservicesController extends AppController
 		
 		$this->autoRender = false;
 	
+	}
+	
+	public function loginClientTest()
+	{
+		$this->autoLayout = false;
+		
 	}
 	
 	public function loginClient()
@@ -51,9 +66,20 @@ class WebservicesController extends AppController
 					->set(['is_login' => '1'])
 					->where(['userPin' => $pin])
 					->execute();
+					
+					
 				
-							
+				//print_r($client_data);
+				//exit;
+				
+				///echo date('Y-m-d H:i:s')."<br>";;			
+				//echo date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))."<br>";
+				//echo date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))."<br>";
+				//exit;
+				
 				$query = $this->UserRelations->query();
+				//$query->first();
+				//debug($query->first());
 				$flag = $query->update()
 					->set(['status' => '1'])
 					->where(['start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
@@ -61,6 +87,10 @@ class WebservicesController extends AppController
 					->andWhere(['client_id' => $client_data['id']])
 					->andWhere(['status' => '0'])
 					->execute();
+					
+				///echo date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'));
+				///echo date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'));
+				
 				
 				$query = $this->UserRelations->query();
 				$flag = $query->update()
@@ -72,10 +102,15 @@ class WebservicesController extends AppController
 					
 				
 				
-				$r = $this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+				
+				$r = $this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 
+				'Client.is_active' => '1',
+				'UserRelations.start_time >' => date('Y-m-d H:i:s', strtotime('-'.$this->settings['ytime'].' minutes'))],'contain'=>['Client','Trainer']))->order(['UserRelations.start_time' => 'ASC'])->first();
 				if($r)
 				{
 					$data = $r->toArray();
+					//print_r($data);
+					//exit;
 					
 					if($data['id'])
 					{

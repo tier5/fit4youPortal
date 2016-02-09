@@ -71,7 +71,10 @@ Router::scope('/', function ($routes) {
     $routes->connect('/webservice/trainerlogin', ['controller' => 'Webservices', 'action' => 'loginTrainer']);
     $routes->connect('/webservice/present', ['controller' => 'Webservices', 'action' => 'present']);
 
+	// For Testing:
+	$routes->connect('/webservice/clientlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
 
+	
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */
