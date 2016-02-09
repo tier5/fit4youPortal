@@ -489,15 +489,29 @@ public function userlist()
     $totRecordsPerPage = 10;
 
     
-
-    $this->paginate = [
+	// 09 Feb 2016: Rermoved  User Id = 1 hard coded checking
+	/*
+	
+	$this->paginate = [
         'limit'=>$totRecordsPerPage,
         'conditions' => [
                 'Users.id <>' => 1,
-		'Users.role'  => 'CLIENT',
+				'Users.role'  => 'CLIENT',
                 'is_deleted' => '0'
             ],
 	'order' => [
+            'Users.id' => 'desc'
+        ]
+        ];
+		*/
+    $this->paginate = [
+        'limit'=>$totRecordsPerPage,
+        'conditions' => [
+                
+				'Users.role'  => 'CLIENT',
+                'is_deleted' => '0'
+            ],
+			'order' => [
             'Users.id' => 'desc'
         ]
         ];
