@@ -7,7 +7,7 @@
     <div class="row-fluid">
         <div class="utopia-widget-content">
             <div class="span6 utopia-form-freeSpace">
-                <?php echo $this->Form->create(null, ['url' => '/webservice/clientlogin','type' => 'post']) ?>
+                <?php echo $this->Form->create(null, ['url' => '/webservice/trainerlogin','type' => 'post']) ?>
                     <fieldset>
                         
                       
