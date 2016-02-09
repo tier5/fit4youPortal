@@ -69,12 +69,15 @@ Router::scope('/', function ($routes) {
     
     $routes->connect('/webservice/clientlogin', ['controller' => 'Webservices', 'action' => 'loginClient']);
     $routes->connect('/webservice/trainerlogin', ['controller' => 'Webservices', 'action' => 'loginTrainer']);
+    $routes->connect('/webservice/adminlogin', ['controller' => 'Webservices', 'action' => 'adminLogin']);
+    $routes->connect('/webservice/missed', ['controller' => 'Webservices', 'action' => 'missed']);
     $routes->connect('/webservice/present', ['controller' => 'Webservices', 'action' => 'present']);
+	$routes->connect('/webservice/current-gym', ['controller' => 'Webservices', 'action' => 'currentGym']);
 
 	// For Testing:
 	$routes->connect('/webservice/clientlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
 	$routes->connect('/webservice/trainerlogintest', ['controller' => 'Webservices', 'action' => 'loginTrainerTest']);
-
+	
 	
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
