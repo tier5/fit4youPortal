@@ -20,12 +20,14 @@ class WebservicesController extends AppController
 		
 		//$this->Auth->allow('loginClientTest', 'loginClient',  'loginTrainer', 'loginTrainerTest', 'present', 'presentTest');
 		//$this->Auth->allow('loginClientTest');
-		$this->Auth->allow('loginClient');
+		/*$this->Auth->allow('loginClient');
 		$this->Auth->allow('loginTrainer');
 		$this->Auth->allow('loginAdmin');
 		$this->Auth->allow('missed');
 		$this->Auth->allow('present');
-		$this->Auth->allow('currentGym');
+		$this->Auth->allow('currentGym');*/
+		
+		$this->Auth->allow();
 		
 	}
 	
