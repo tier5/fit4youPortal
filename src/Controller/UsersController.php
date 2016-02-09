@@ -132,8 +132,6 @@ public function dashboard()
 	$this->set('authors',['Gym','Fitness','Gym App']);
 	$session = $this->request->session();
 	
-	print_r($session);
-	exit;
 	
 	$adminDetls = $session->read('admin.details');
 	$this->set('title',SITE_NAME." Admin Dashboard");

@@ -17,16 +17,7 @@ class WebservicesController extends AppController
 	{		
 		parent::beforeFilter($event);
 		
-		
-		//$this->Auth->allow('loginClientTest', 'loginClient',  'loginTrainer', 'loginTrainerTest', 'present', 'presentTest');
-		//$this->Auth->allow('loginClientTest');
-		/*$this->Auth->allow('loginClient');
-		$this->Auth->allow('loginTrainer');
-		$this->Auth->allow('loginAdmin');
-		$this->Auth->allow('missed');
-		$this->Auth->allow('present');
-		$this->Auth->allow('currentGym');*/
-		
+		// If you want all methods to be allowed for this controller
 		$this->Auth->allow();
 		
 	}
@@ -83,10 +74,7 @@ class WebservicesController extends AppController
 				//print_r($client_data);
 				//exit;
 				
-				///echo date('Y-m-d H:i:s')."<br>";;			
-				//echo date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))."<br>";
-				//echo date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))."<br>";
-				//exit;
+				
 				
 				$query = $this->UserRelations->query();
 				//$query->first();
@@ -99,8 +87,6 @@ class WebservicesController extends AppController
 					->andWhere(['status' => '0'])
 					->execute();
 					
-				///echo date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'));
-				///echo date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'));
 				
 				
 				$query = $this->UserRelations->query();
@@ -120,8 +106,6 @@ class WebservicesController extends AppController
 				if($r)
 				{
 					$data = $r->toArray();
-					//print_r($data);
-					//exit;
 					
 					if($data['id'])
 					{
