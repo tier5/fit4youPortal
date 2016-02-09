@@ -22,9 +22,6 @@
 
 						?>
 						
-						<li><?php echo $active_class ?></li>
-
-
                         <li <?php if($active_class == 'dashboard') { ?>class="current" <?php } ?>><a class="dashboard smronju" href="<?php echo BASE_URL; ?>administrator/dashboard" title="Dashboard"><span><i class="fa fa-dashboard"></i> Dashboard</span></a></li>
                         
                         <li><a class="tables" href="<?php echo BASE_URL; ?>administrator/client"><span>View Clients</span></a>
