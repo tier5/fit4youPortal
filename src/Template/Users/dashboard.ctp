@@ -1,7 +1,7 @@
 <!-- Body start -->
 
      <div class="span10 body-container">
-          <span style="color:green;"><?= $this->Flash->render('positive') ?></span>
+          <span style="color:green;"><?php echo $this->Flash->render('positive') ?></span>
           <div class="row-fluid">
             <div class="span12">
                 <ul class="breadcrumb">

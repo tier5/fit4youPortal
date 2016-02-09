@@ -32,6 +32,8 @@ class AdminschedulesController extends AppController{
         ];        
         $query=$this->UserRelations->find('all',array('conditions'=>['Client.is_active' => '1','Trainer.is_active' => '1'],'contain'=>['Client','Trainer']));
         $allRecordCount = $query->count();
+		
+		
         
         
         //$arr = $query->toArray();
@@ -41,6 +43,7 @@ class AdminschedulesController extends AppController{
         ));
         
         $schedules=$this->paginate($query);
+		//print_r($schedules);
         
         $this->set('schedules', $schedules);
         $this->set('_serialize', ['schedules']);

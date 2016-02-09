@@ -35,7 +35,7 @@
                         <div class="utopia-widget-title" id="pageLabelDiv">
                             <img class="utopia-widget-icon" src="<?php echo BASE_URL; ?>backend/img/icons/paragraph_justify.png">
                             <span>Schedule List</span>
-			    <span class="new_span_class"><a href="<?php echo BASE_URL; ?>administrator/schedule/add"><i class="fa fa-pencil"></i> Add Session</a></span>
+							<span class="new_span_class"><a href="<?php echo BASE_URL; ?>administrator/schedule/add"><i class="fa fa-pencil"></i> Add Session</a></span>
                         </div>
                         <div class="utopia-widget-content">
                         
@@ -57,7 +57,7 @@
                                 window.location.href = url;
                             }
                         </script>      
-                            <span id="schedule_list" style="display: none;">
+                            <span id="schedule_list" style="display:block;">
                               <div class="myAnchorSpanArea">
                                    <span  class="active"><a href="javascript:void(0);" id="list2"><i class="fa fa-list-ul"></i>List View</a></span>
                                    <span ><a href="javascript:void(0);" id="chart2"><i class="fa fa-line-chart"></i>Calendar View</a></span>
@@ -77,7 +77,8 @@
 
                                 <tbody>  
                                     
-                                <?php if($allRecordCount > 0){ $schedule = 0;?>
+                                <?php 
+								if($allRecordCount > 0){ $schedule = 0;?>
                                 <?php foreach ($schedules as $schedule): $data = $schedule->toArray();
                                         $start_time = get_object_vars($data['start_time']);
                                         $end_time = get_object_vars($data['end_time']);

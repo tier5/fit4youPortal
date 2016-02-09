@@ -145,4 +145,20 @@ class AppController extends Controller
         }
         return $random;
     } 
+	
+	public function isAuthorized($user)
+	{
+		 $action = $this->request->params['action'];
+		 // The add and index actions are always allowed.
+		 if (in_array($action, ['index', 'dashboard','logout','add','userlist','trainerlist','edit','delete','userProfile','userStat','changePassword','adminProfile','deleteClient','deleteTrainer','deleteStat'])) {
+		 return true;
+		 }
+		 // All other actions require an id.
+		 if (empty($this->request->params['pass'][0])) {
+		 return false;
+		 }
+
+		 return parent::isAuthorized($user);
+	}
+
 }

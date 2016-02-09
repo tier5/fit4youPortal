@@ -73,7 +73,17 @@ Router::scope('/', function ($routes) {
     $routes->connect('/webservice/missed', ['controller' => 'Webservices', 'action' => 'missed']);
     $routes->connect('/webservice/present', ['controller' => 'Webservices', 'action' => 'present']);
 	$routes->connect('/webservice/current-gym', ['controller' => 'Webservices', 'action' => 'currentGym']);
+	
+	$routes->connect('/administrator/schedule', ['controller' => 'Adminschedules', 'action' => 'index']);
+	$routes->connect('/administrator/schedule/add', ['controller' => 'Adminschedules', 'action' => 'add']);
+	$routes->connect('/administrator/schedule/edit/*', ['controller' => 'Adminschedules', 'action' => 'edit']);
+	$routes->connect('/administrator/schedule/delete/*', ['controller' => 'Adminschedules', 'action' => 'delete']);
 
+	$routes->connect('/administrator/settings', ['controller' => 'Adminsettings', 'action' => 'index']);
+	$routes->connect('/administrator/settings/add', ['controller' => 'Adminsettings', 'action' => 'add']);
+	$routes->connect('/administrator/settings/edit/*', ['controller' => 'Adminsettings', 'action' => 'edit']);
+	$routes->connect('/administrator/settings/delete/*', ['controller' => 'Adminsettings', 'action' => 'delete']);
+	
 	// For Testing:
 	$routes->connect('/webservice/clientlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
 	$routes->connect('/webservice/trainerlogintest', ['controller' => 'Webservices', 'action' => 'loginTrainerTest']);

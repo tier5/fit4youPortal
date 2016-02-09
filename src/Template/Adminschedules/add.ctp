@@ -38,9 +38,9 @@
                                         {
                                             foreach($clients as $client)
                                             {
-                                    ?>
-                                        <option value="<?php echo $client->id;?>"><?php echo $client->firstName;?> <?php echo $client->lastName;?></option>
-                                    <?php
+											?>
+												<option value="<?php echo $client->id;?>"><?php echo $client->firstName;?> <?php echo $client->lastName;?></option>
+											<?php
                                             }
                                         }
                                     ?>
