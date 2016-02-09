@@ -39,7 +39,15 @@ class WebservicesController extends AppController
 	
 	}
 	
+	// Created to test the service and JSON response on a web client
 	public function loginClientTest()
+	{
+		$this->autoLayout = false;
+		
+	}
+	
+	
+	public function loginTrainerTest()
 	{
 		$this->autoLayout = false;
 		
@@ -188,7 +196,7 @@ class WebservicesController extends AppController
 					echo json_encode($data);
 					exit;
 					
-				}
+				}	
 				
 				
 			}
@@ -216,7 +224,7 @@ class WebservicesController extends AppController
 		$pin = $this->request->data['pin'];
 
 		
-		if ($this->Users->find('all',['conditions' => ['userPin' => $pin,'role' => 'TRAINER', 'is_active' => '1']])->count())
+		if ($this->Users->find('all',['conditions' => ['userPin' => $pin, 'role' => 'TRAINER', 'is_active' => '1']])->count())
 		{
 			$data['success'] = '1';
 			
