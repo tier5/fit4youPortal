@@ -11,13 +11,21 @@ use Cake\I18n\Time;
 class WebservicesController extends AppController
 {
 	var $uses=array('User');
-
+	
+	
+	public function beforeFilter(Event $event)
+	{		
+		parent::beforeFilter($event);
+		$this->Auth->allow('loginClient', 'loginTrainer', 'present');
+	}
+	
 	
 
 	////////// login page
 
 	public function index()
 	{
+		
 		$this->autoRender = false;
 	
 	}
@@ -27,129 +35,137 @@ class WebservicesController extends AppController
 		$this->autoRender = false;
 		$this->loadModel('Users');
 		$this->loadModel('UserRelations');
-		$pin = $this->request->data['pin'];
 		
-		
-				
-		if ($this->Users->find('all',['conditions' => ['userPin' => $pin,'role' => 'CLIENT', 'is_active' => '1']])->count())
+		if(isset($this->request->data['pin']))
 		{
+			$pin = $this->request->data['pin'];
 			
-			
-			$client_data = $this->Users->find('all',['conditions' => ['userPin' => $pin]])->first()->toArray();
-			
-			$query = $this->Users->query();
-			$flag = $query->update()
-				->set(['is_login' => '1'])
-				->where(['userPin' => $pin])
-				->execute();
-			
-						
-			$query = $this->UserRelations->query();
-			$flag = $query->update()
-				->set(['status' => '1'])
-				->where(['start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
-				->orWhere(['start_time >=' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
-				->andWhere(['client_id' => $client_data['id']])
-				->andWhere(['status' => '0'])
-				->execute();
-			
-			$query = $this->UserRelations->query();
-			$flag = $query->update()
-				->set(['status' => '0'])
-				->where(['start_time <' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
-				->orWhere(['start_time >' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))])
-				->andWhere(['client_id' => $client_data['id']])
-				->execute();
-				
-			
-			
-			$r = $this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
-			if($r)
+			if ($this->Users->find('all', ['conditions' => ['userPin' => $pin, 'role' => 'CLIENT', 'is_active' => '1']])->count())
 			{
-				$data = $r->toArray();
 				
-				if($data['id'])
+				
+				$client_data = $this->Users->find('all',['conditions' => ['userPin' => $pin]])->first()->toArray();
+				
+				$query = $this->Users->query();
+				$flag = $query->update()
+					->set(['is_login' => '1'])
+					->where(['userPin' => $pin])
+					->execute();
+				
+							
+				$query = $this->UserRelations->query();
+				$flag = $query->update()
+					->set(['status' => '1'])
+					->where(['start_time <=' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes')) ])
+					->orWhere(['start_time >=' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
+					->andWhere(['client_id' => $client_data['id']])
+					->andWhere(['status' => '0'])
+					->execute();
+				
+				$query = $this->UserRelations->query();
+				$flag = $query->update()
+					->set(['status' => '0'])
+					->where(['start_time <' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))])
+					->orWhere(['start_time >' => date('Y-m-d H:i:s',strtotime('+'.$this->settings['xtime'].' minutes'))])
+					->andWhere(['client_id' => $client_data['id']])
+					->execute();
+					
+				
+				
+				$r = $this->UserRelations->find('all',array('conditions'=>['Client.userPin' => $pin, 'Client.is_active' => '1','UserRelations.start_time >' => date('Y-m-d H:i:s',strtotime('-'.$this->settings['ytime'].' minutes'))],'contain'=>['Client','Trainer']))->order(['start_time' => 'ASC'])->first();
+				if($r)
 				{
-					$data['success'] = '1';
-					$data['xtime'] = $this->settings['xtime'];
-					$data['ytime'] = $this->settings['ytime'];
-					$start_time = get_object_vars($data['start_time']);
-					$end_time = get_object_vars($data['end_time']);
-					$data['start_time'] =  $start_time['date'];
-					$data['end_time'] =  $end_time['date'];
-					if(!empty($data['client']['photo']))
+					$data = $r->toArray();
+					
+					if($data['id'])
 					{
-						$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
+						$data['success'] = '1';
+						$data['xtime'] = $this->settings['xtime'];
+						$data['ytime'] = $this->settings['ytime'];
+						$start_time = get_object_vars($data['start_time']);
+						$end_time = get_object_vars($data['end_time']);
+						$data['start_time'] =  $start_time['date'];
+						$data['end_time'] =  $end_time['date'];
+						if(!empty($data['client']['photo']))
+						{
+							$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['client']['photo'];
+						}
+						else
+						{
+							$data['client']['photo'] = '';
+						}
+						
+						if(!empty($data['trainer']['photo']))
+						{
+							$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
+						}
+						else
+						{
+							$data['trainer']['photo'] = '';
+						}
+						
+						echo json_encode($data);
+						exit;
+					}
+					else
+					{
+						echo json_encode(['status'=>0,'msg'=>'Sorry there is some error.Try later']);
+						exit;
+						
+					}
+					
+				}
+				else
+				{
+					$data['trainer'] = array();
+					$data['client'] = array();
+					$data['client'] = $client_data;
+					if(!empty($client_data['photo']))
+					{
+						$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
 					}
 					else
 					{
 						$data['client']['photo'] = '';
 					}
 					
-					if(!empty($data['trainer']['photo']))
-					{
-						$data['trainer']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$data['trainer']['photo'];
-					}
-					else
-					{
-						$data['trainer']['photo'] = '';
-					}
-					
+					$data['start_time'] = '';
+					$data['end_time'] = '';
+					$data['status'] = '';
+					$data['xtime'] = '';
+					$data['ytime'] = '';
+					$data['trainer_id'] = $client_data['id'];
+					$data['client_id'] = '';
+					$data['trainer'] =[
+						'id' 		=> '',
+						'firstName' 	=> '',
+						'lastName' 	=> '',
+						'userPin' 	=> '',
+						'city' 		=> '',
+						'state' 	=> '',
+						'zip' 		=> '',
+						'address' 	=> '',
+						'photo' 	=> '',
+						'status' 	=> '',
+						
+					];
+					$data['success'] = '1';
 					echo json_encode($data);
 					exit;
-				}
-				else
-				{
-					echo json_encode(['status'=>0,'msg'=>'Sorry there is some error.Try later']);
-					exit;
 					
 				}
+				
 				
 			}
 			else
 			{
-				$data['trainer'] = array();
-				$data['client'] = array();
-				$data['client'] = $client_data;
-				if(!empty($client_data['photo']))
-				{
-					$data['client']['photo'] = BASE_URL.'uploads/images/users_profile/thumb/'.$client_data['photo'];
-				}
-				else
-				{
-					$data['client']['photo'] = '';
-				}
-				
-				$data['start_time'] = '';
-				$data['end_time'] = '';
-				$data['status'] = '';
-				$data['xtime'] = '';
-				$data['ytime'] = '';
-				$data['trainer_id'] = $client_data['id'];
-				$data['client_id'] = '';
-				$data['trainer'] =[
-					'id' 		=> '',
-					'firstName' 	=> '',
-					'lastName' 	=> '',
-					'userPin' 	=> '',
-					'city' 		=> '',
-					'state' 	=> '',
-					'zip' 		=> '',
-					'address' 	=> '',
-					'photo' 	=> '',
-					'status' 	=> '',
-					
-				];
-				$data['success'] = '1';
-				echo json_encode($data);
-				exit;
-				
+				echo json_encode(['success'=>0,'msg'=>'Sorry PIN does not match']);
+				exit;	
 			}
 			
-			
+		
 		}
-		else
-		{
+		else{
 			echo json_encode(['success'=>0,'msg'=>'Sorry PIN does not match']);
 			exit;	
 		}
