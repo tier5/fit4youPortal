@@ -44,9 +44,8 @@ if($session->check('login_error')){
                     
                      <div class="pull-right">
                         <?php
-              
-echo $this->Form->checkbox('remember_me', ['value' =>'on','hiddenField' => false, 'checked' => true]);
-        ?> Remember me !</div> 
+						echo $this->Form->checkbox('remember_me', ['value' =>'on','hiddenField' => false, 'checked' => true]);
+						?> Remember me !</div> 
                  </li>
              </ul>
 

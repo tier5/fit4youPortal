@@ -1,7 +1,7 @@
 <!-- styles -->
 <?php
 
-echo $this->Html->css(['../backend/css/utopia-white','../backend/css/utopia-responsive','../backend/css/ui-lightness/jquery-ui','../backend/css/gallery/modal','../jqvd/css/validationEngine.jquery','../backend/css/chosen','../backend/css/ie','../backend/css/datepicker']);
+echo $this->Html->css(['../backend/css/utopia-white','../backend/css/utopia-responsive','../backend/css/ui-lightness/jquery-ui','../backend/css/modal','../jqvd/css/validationEngine.jquery','../backend/css/chosen','../backend/css/ie','../backend/css/datepicker']);
 echo $this->Html->css(['../backend/fullcalendar/fullcalendar']);
 echo $this->Html->css(['../backend/fullcalendar/fullcalendar.print'],['media' => 'print']);
 echo $this->Html->css(['../backend/css/font-awesome.min.css']);
