@@ -73,7 +73,7 @@ Router::scope('/', function ($routes) {
 
 	// For Testing:
 	$routes->connect('/webservice/clientlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
-	$routes->connect('/webservice/trainerlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
+	$routes->connect('/webservice/trainerlogintest', ['controller' => 'Webservices', 'action' => 'loginTrainerTest']);
 
 	
     /**
