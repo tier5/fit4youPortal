@@ -61,18 +61,15 @@ Router::scope('/', function ($routes) {
     $routes->connect('/administrator/trainer', ['controller' => 'Users', 'action' => 'trainerlist']);
     $routes->connect('/administrator/user/edit/*', ['controller' => 'Users', 'action' => 'edit']);
     $routes->connect('/administrator/user/delete/*', ['controller' => 'Users', 'action' => 'delete']);
-
+	$routes->connect('/administrator/user/userstat/*', ['controller' => 'Users', 'action' => 'userStat']);
+    $routes->connect('/administrator/user/delete-stat/*', ['controller' => 'Users', 'action' => 'deleteStat']);
+	$routes->connect('/administrator/user/user-profile', ['controller' => 'Users', 'action' => 'deleteStat']);
+	
+    
     $routes->connect('/administrator/gyms/add', ['controller' => 'Admingyms', 'action' => 'add']);
     $routes->connect('/administrator/gyms', ['controller' => 'Admingyms', 'action' => 'index']);
     $routes->connect('/administrator/gyms/edit/*', ['controller' => 'Admingyms', 'action' => 'edit']);
     $routes->connect('/administrator/gyms/delete/*', ['controller' => 'Admingyms', 'action' => 'delete']);
-    
-    $routes->connect('/webservice/clientlogin', ['controller' => 'Webservices', 'action' => 'loginClient']);
-    $routes->connect('/webservice/trainerlogin', ['controller' => 'Webservices', 'action' => 'loginTrainer']);
-    $routes->connect('/webservice/adminlogin', ['controller' => 'Webservices', 'action' => 'adminLogin']);
-    $routes->connect('/webservice/missed', ['controller' => 'Webservices', 'action' => 'missed']);
-    $routes->connect('/webservice/present', ['controller' => 'Webservices', 'action' => 'present']);
-	$routes->connect('/webservice/current-gym', ['controller' => 'Webservices', 'action' => 'currentGym']);
 	
 	$routes->connect('/administrator/schedule', ['controller' => 'Adminschedules', 'action' => 'index']);
 	$routes->connect('/administrator/schedule/add', ['controller' => 'Adminschedules', 'action' => 'add']);
@@ -84,7 +81,17 @@ Router::scope('/', function ($routes) {
 	$routes->connect('/administrator/settings/edit/*', ['controller' => 'Adminsettings', 'action' => 'edit']);
 	$routes->connect('/administrator/settings/delete/*', ['controller' => 'Adminsettings', 'action' => 'delete']);
 	
-	// For Testing:
+	// For Web Services Only
+	    
+    $routes->connect('/webservice/clientlogin', ['controller' => 'Webservices', 'action' => 'loginClient']);
+    $routes->connect('/webservice/trainerlogin', ['controller' => 'Webservices', 'action' => 'loginTrainer']);
+    $routes->connect('/webservice/adminlogin', ['controller' => 'Webservices', 'action' => 'adminLogin']);
+    $routes->connect('/webservice/missed', ['controller' => 'Webservices', 'action' => 'missed']);
+    $routes->connect('/webservice/present', ['controller' => 'Webservices', 'action' => 'present']);
+	$routes->connect('/webservice/current-gym', ['controller' => 'Webservices', 'action' => 'currentGym']);
+
+	
+	// For Web Services Testing:
 	$routes->connect('/webservice/clientlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
 	$routes->connect('/webservice/trainerlogintest', ['controller' => 'Webservices', 'action' => 'loginTrainerTest']);
 	

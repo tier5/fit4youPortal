@@ -5197,6 +5197,7 @@ ul.nat_org li {
 .leftmenu ul li {
     display: block;
     width: 100%;
+	position: relative;
 }
 .leftmenu ul li a {
     /*background: url(../img/sprites.png) no-repeat scroll 8px center;
@@ -5280,26 +5281,28 @@ ul.nat_org li {
 
 .lefticon ul li .sub-menu {
     display: none;
-    margin: -47px 0 0px 0px;
+    margin: 0 0 0px 0px;
     list-style: none;
     position: absolute;
     width: 100%;
-    left: 38px;
+    /*left: 38px;*/
+	left: 100% !important;
+	top:0;
     z-index: 9999;
 }
 .lefticon ul li .sub-menu li {
-    width: 250px;
+    width: auto;
     position: relative;
-    float: left;
+    /*float: left;*/
     display: block;
 }
 
 .lefticon .leftmenu ul li a {
     height: 45px;
-    width: 2px;
+    /*width: 2px;*/
 }
 .lefticon .leftmenu ul li a span {
-    display: none;
+    /*display: none;*/
 }
 .leftmenu ul li a.dashboard {
     background-position: -154px -438px;

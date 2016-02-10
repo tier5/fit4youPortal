@@ -146,6 +146,7 @@ public function dashboard()
 	$this->set('totTrainer',$totTrainer);
 	$totGyms = $this->Gyms->find('all')->count();
 	$this->set('totGyms',$totGyms);
+	
 }
 
 public function edit($id=null)
@@ -614,11 +615,11 @@ public function userStat($user_id=NULL)
 	if(!empty($postData['id']))
 	{
 		$databaseArr = array(
-			'weight'     	=>  $postData['weight'],
+			'weight'    =>  $postData['weight'],
 			'chest'		=>  $postData['chest'],
 			'waist'    	=>  $postData['waist'],
-			'biceps'    	=>  $postData['biceps'],
-			'triceps'    	=>  $postData['triceps'],
+			'biceps'    =>  $postData['biceps'],
+			'triceps'   =>  $postData['triceps'],
 		);
 		
 		//$user = $this->UserStats->newEntity($postData);

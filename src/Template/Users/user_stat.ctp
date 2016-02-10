@@ -46,7 +46,7 @@
                             </table>
 			<div class="myAnchorSpanArea">
 				    <span id="list" class="active"><a href="javascript:void(0);" ><i class="fa fa-list-ul"></i>List View</a></span>
-				    <span id="chart"><a href="javascript:void(0);" ><i class="fa fa-line-chart"></i>Graph View</a></span>
+				    <span id="chart"><a href="javascript:void(0);"><i class="fa fa-line-chart"></i>Graph View</a></span>
 			</div>
 			<div id="load_content"> 
 			<span id="list_table" style="display:block">
@@ -256,6 +256,7 @@ $(function(){
     $('#options').on('change',function(){
 	    //google.setOnLoadCallback(drawChart);
 	    var type = $('#options').val();
+		console.log(type)
 	    drawChart(type);
     });
   

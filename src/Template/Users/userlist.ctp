@@ -88,17 +88,16 @@
                     </section>
                 </div>
             </div>
+			
             <div id="popup" class="modal-box">  
-                        <header>
-                          <a href="#" class="js-modal-close close">×</a>
-                          <h3>Client Profile</h3>
-                        </header>
-                        <div class="modal-body" id="user_profile">
-
-                      </div>
-                        <footer>
-                          <a href="#" class="js-modal-close">Close</a>
-                        </footer>
+				<header>
+				  <a href="#" class="js-modal-close close">×</a>
+				  <h3>Client Profile</h3>
+				</header>
+				<div class="modal-body" id="user_profile">User profile to load here...</div>
+				<footer>
+				  <a href="#" class="js-modal-close">Close</a>
+				</footer>
             </div>
 
 </div>
@@ -117,22 +116,23 @@
 <script type="text/javascript">
 function viewProfile(user_id)
 {
-            $.ajax({
-                        type: "post",
-                        url: '<?php echo BASE_URL."administrator/user/user-profile"; ?>',
-                        data: {
-                                'user_id': user_id
-                        },
-                        success: function(data){
-                                    $('#user_profile').html(data);
-                        },
-                        error: function(e){
-                                console.log(e);
-                        }
-                    
+	
+	$.ajax({
+		type: "post",
+		url: '<?php echo BASE_URL."administrator/user/user-profile"; ?>',
+		data: {
+			'user_id': user_id
+		},
+		success: function(data){			
+			$('#user_profile').html(data);
+		},
+		error: function(e){
+				console.log(e);
+		}
+	
 
-    
-            });
+
+	});
 
 }
 </script>

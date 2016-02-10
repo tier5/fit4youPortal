@@ -24,9 +24,13 @@
 						
                         <li <?php if($active_class == 'dashboard') { ?>class="current" <?php } ?>><a class="dashboard smronju" href="<?php echo BASE_URL; ?>administrator/dashboard" title="Dashboard"><span><i class="fa fa-dashboard"></i> Dashboard</span></a></li>
                         
-                        <li><a class="tables" href="<?php echo BASE_URL; ?>administrator/client"><span>View Clients</span></a>
-                        <li><a class="tables" href="<?php echo BASE_URL; ?>administrator/trainer"><span>View Trainers</span></a>
-                        <li><a class="widgets smronju" href="<?php echo BASE_URL; ?>administrator/user/add"><span>Add User</span></a></li>
+                        <li <?php if($active_class == 'user') { ?>class="current" <?php } ?>>
+						<a class="list" href="javascript:void(0)"><span><i class="fa fa-user"></i> Users</span></a>
+                            <ul class="dropdown" style="display:none;">
+                                <li><a class="tables" href="<?php echo BASE_URL; ?>administrator/client"><span>View Clients</span></a>
+                                <li><a class="tables" href="<?php echo BASE_URL; ?>administrator/trainer"><span>View Trainers</span></a>
+                                <li><a class="widgets smronju" href="<?php echo BASE_URL; ?>administrator/user/add"><span>Add User</span></a></li>
+                            </ul>
                         </li>
                                 
                         <li <?php if($active_class == 'schedule') { ?>class="current" <?php } ?>><a class="list" href="<?php echo BASE_URL; ?>administrator/schedule"><span><i class="fa fa-list-alt"></i> Schedule</span></a></li>
