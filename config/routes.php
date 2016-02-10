@@ -63,7 +63,7 @@ Router::scope('/', function ($routes) {
     $routes->connect('/administrator/user/delete/*', ['controller' => 'Users', 'action' => 'delete']);
 	$routes->connect('/administrator/user/userstat/*', ['controller' => 'Users', 'action' => 'userStat']);
     $routes->connect('/administrator/user/delete-stat/*', ['controller' => 'Users', 'action' => 'deleteStat']);
-	$routes->connect('/administrator/user/user-profile', ['controller' => 'Users', 'action' => 'deleteStat']);
+	$routes->connect('/administrator/user/user-profile', ['controller' => 'Users', 'action' => 'userProfile']);
 	
     
     $routes->connect('/administrator/gyms/add', ['controller' => 'Admingyms', 'action' => 'add']);
@@ -94,6 +94,8 @@ Router::scope('/', function ($routes) {
 	// For Web Services Testing:
 	$routes->connect('/webservice/clientlogintest', ['controller' => 'Webservices', 'action' => 'loginClientTest']);
 	$routes->connect('/webservice/trainerlogintest', ['controller' => 'Webservices', 'action' => 'loginTrainerTest']);
+	$routes->connect('/administrator/settings/edit/*', ['controller' => 'Adminsettings', 'action' => 'edit']);
+	$routes->connect('/administrator/test', ['controller' => 'Users', 'action' => 'test']);
 	
 	
     /**
