@@ -26,10 +26,6 @@ class UsersController extends AppController
 	public function initialize()
 	{
 	    parent::initialize();
-	    
-	    
-		
-		
 	}
 
 
@@ -564,9 +560,13 @@ public function trainerlist()
 	
 }
 
-public function userProfile()
+
+public function test()
 {
-	
+		
+}
+public function userProfile()
+{	
 	$this->request->allowMethod(['ajax']);
 	$this->layout = 'ajax';
 	$this->set('active_class','user');
@@ -580,9 +580,10 @@ public function userProfile()
 	$this->set('title',"Admin|View Client Profile");
 	$this->set('description','View Client Profile');
 	$this->set('userRole',$adminDetls->role);
-	$userData = $this->Users->get($user_id, [
-	    'contain' => []
-	]);
+	$userData = $this->Users->get($user_id);
+	
+	//print_r($userData);
+	//exit;
 	
 	$this->set(compact('userData'));
 	$this->set('_serialize', ['userData']);
@@ -886,33 +887,33 @@ public function adminProfile()
             if($_FILES['usersImage']['name']!='')
             {
 		
-		$targetPath = './uploads/images/users_profile/';
-		$imageName = time().rand(0,100);
-		$up=$this->ImageTransform->upload("usersImage",$targetPath,$imageName);
-		if($up)
-		{
-		    chmod($targetPath.$imageName.'.'.$extn,0777);                    
-		    $this->ImageTransform->setQuality(100);
-		    $this->ImageTransform->resize($this->ImageTransform->main_src,100,100, './uploads/images/users_profile/thumb/'.$this->ImageTransform->main_img);
-		}
-	    
-                $databaseArr = array(
-			'username'          =>      $postData['username'],
-			'firstName'         =>      $postData['firstName'],
-			'lastName'          =>      $postData['lastName'],
-			'userPin'           =>      $postData['userPin'],
-			'email'             =>      $postData['email'],
-			'phone'             =>      $postData['phone'],
-			'city'              =>      $postData['city'],
-			'state'             =>      $postData['state'],
-			'zip'               =>      $postData['zip'],
-			'address'           =>      $postData['address'],
-			'photo'             =>      $imageName.'.'.$extn,
-			'update_date'	    =>      Time::now(),
-			'is_login'          =>      '1',
-			'is_active'         =>      '1',
-			'is_deleted'        =>      '0'
-		);    
+				$targetPath = './uploads/images/users_profile/';
+				$imageName = time().rand(0,100);
+				$up=$this->ImageTransform->upload("usersImage",$targetPath,$imageName);
+				if($up)
+				{
+					chmod($targetPath.$imageName.'.'.$extn,0777);                    
+					$this->ImageTransform->setQuality(100);
+					$this->ImageTransform->resize($this->ImageTransform->main_src,100,100, './uploads/images/users_profile/thumb/'.$this->ImageTransform->main_img);
+				}
+				
+						$databaseArr = array(
+					'username'          =>      $postData['username'],
+					'firstName'         =>      $postData['firstName'],
+					'lastName'          =>      $postData['lastName'],
+					'userPin'           =>      $postData['userPin'],
+					'email'             =>      $postData['email'],
+					'phone'             =>      $postData['phone'],
+					'city'              =>      $postData['city'],
+					'state'             =>      $postData['state'],
+					'zip'               =>      $postData['zip'],
+					'address'           =>      $postData['address'],
+					'photo'             =>      $imageName.'.'.$extn,
+					'update_date'	    =>      Time::now(),
+					'is_login'          =>      '1',
+					'is_active'         =>      '1',
+					'is_deleted'        =>      '0'
+				);    
             }
             else
             {
@@ -974,11 +975,11 @@ public function isAuthorized($user)
      $action = $this->request->params['action'];
      // The add and index actions are always allowed.
      if (in_array($action, ['index', 'dashboard','logout','add','userlist','trainerlist','edit','delete','userProfile','userStat','changePassword','adminProfile','deleteClient','deleteTrainer','deleteStat'])) {
-     return true;
+		return true;
      }
      // All other actions require an id.
      if (empty($this->request->params['pass'][0])) {
-     return false;
+		return false;
      }
 
      return parent::isAuthorized($user);

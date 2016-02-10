@@ -116,14 +116,13 @@
 <script type="text/javascript">
 function viewProfile(user_id)
 {
-	
 	$.ajax({
 		type: "post",
 		url: '<?php echo BASE_URL."administrator/user/user-profile"; ?>',
 		data: {
 			'user_id': user_id
 		},
-		success: function(data){			
+		success: function(data){
 			$('#user_profile').html(data);
 		},
 		error: function(e){
