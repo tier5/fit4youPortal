@@ -68,12 +68,6 @@ class WebservicesController extends AppController
 					->set(['is_login' => '1'])
 					->where(['userPin' => $pin])
 					->execute();
-					
-					
-				
-				//print_r($client_data);
-				//exit;
-				
 				
 				
 				$query = $this->UserRelations->query();
@@ -86,8 +80,7 @@ class WebservicesController extends AppController
 					->andWhere(['client_id' => $client_data['id']])
 					->andWhere(['status' => '0'])
 					->execute();
-					
-				
+							
 				
 				$query = $this->UserRelations->query();
 				$flag = $query->update()
@@ -106,6 +99,8 @@ class WebservicesController extends AppController
 				if($r)
 				{
 					$data = $r->toArray();
+					print_r($data);
+					exit;
 					
 					if($data['id'])
 					{
